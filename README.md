@@ -22,6 +22,6 @@ project - can I use it ?</br>
 
 </br> 안녕하세요 -서연 </br>
 </br> HI. -영은 </br>
-</br> 안녕~ 예린 </br>
+</br> 안녕!! 예린 </br>
 
 
