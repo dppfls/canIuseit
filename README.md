@@ -16,7 +16,7 @@ project - can I use it ?</br>
 테스트 준희</br>
 </br></br>테스트  서연</br>
 
-</br></br> 서연 테스트 S2 </br>   
+</br></br> 서연 테스트 S 2 </br>   
 
 
 
