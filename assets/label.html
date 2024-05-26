@@ -1,213 +1,132 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>내 제품 소비기한 한눈에 보기</title>
-    <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="favicon.ico">
-
-    <!--Google Font link-->
-    <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
-    <link rel="stylesheet" href="assets/css/slick/slick.css"> 
-    <link rel="stylesheet" href="assets/css/slick/slick-theme.css">
-    <link rel="stylesheet" href="assets/css/animate.css">
-    <link rel="stylesheet" href="assets/css/iconfont.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/bootstrap.css">
-    <link rel="stylesheet" href="assets/css/magnific-popup.css">
-    <link rel="stylesheet" href="assets/css/bootsnav.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/responsive.css" />
-
-    <script src="assets/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
-        #look {
-            background: url('assets/images/lip.png') no-repeat center center;
-            background-size: cover;
-            padding: 100px 0;
+        body {
+            font-family: 'Inter', sans-serif;
         }
-        .overlay {
-            background: rgba(0, 0, 0, 0.1); /* Optional: for a dark overlay */
+        
+        .navbar {
+            background-color: #fff;
+            border-bottom: 1px solid #e7e7e7;
         }
-        .products {
-            background: #f8f9fa;
-            padding-top: 50px;
+        
+        .navbar-nav .nav-link {
+            color: #000;
         }
-        .main-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #000000;
-            padding: 50px;
-            position: relative;
+        
+        .navbar-nav .nav-link:hover {
+            color: #6c63ff;
         }
-        .main-content img {
+        
+        .navbar-nav .nav-link.active {
+            color: #6c63ff;
+        }
+        
+        .hero {
+            background-color: #000;
+            color: #fff;
+            padding: 50px 0;
+            text-align: center;
+        }
+        
+        .hero img {
             max-width: 100%;
             height: auto;
+            border-radius: 10px;
         }
-        .main-content .details {
-            position: absolute;
-            right: 50px;
-            color: #FFFFFF;
+        
+        .product-details {
+            color: #fff;
+            text-align: left;
+            margin-top: 20px;
         }
-        .main-content .details p {
-            font-size: 18px;
-        }
-        .main-content .details button {
-            padding: 10px 20px;
-            background-color: #7D3CFF;
-            color: #FFFFFF;
+        
+        .btn-primary {
+            background-color: #6c63ff;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
+        }
+        
+        .btn-primary:hover {
+            background-color: #5548c8;
+        }
+        
+        footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            text-align: center;
         }
     </style>
 </head>
 
-<body data-spy="scroll" data-target=".navbar-collapse">
-    <!-- Preloader -->
-    <div id="loading">
-        <div id="loading-center">
-            <div id="loading-center-absolute">
-                <div class="object" id="object_one"></div>
-                <div class="object" id="object_two"></div>
-                <div class="object" id="object_three"></div>
-                <div class="object" id="object_four"></div>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">써도 되나?</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">제품 소비기한 조회</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">내 제품 소비기한 한눈에 보기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">라벨지 출력하기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">캘린더 일정 확인하기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary text-white" href="#">Login</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <!-- 수정할 수 있는 이미지 부분 -->
+                    <img src="assets/images/Medicine.png" alt="Product Image">
+                </div>
+                <div class="col-md-4 product-details">
+                    <!-- 수정할 수 있는 제품 정보 부분 -->
+                    <h3>체리맛 감기약</h3>
+                    <p>제조일자: 2024-03-23</p>
+                    <p>소비기한: 2025-03-23</p>
+                    <!-- 버튼 -->
+                    <a href="#" class="btn btn-primary btn-block">눌러서 출력하기</a>
+                </div>
             </div>
         </div>
-    </div><!--End off Preloader -->
+    </section>
 
-    <div class="culmn">
-        <!-- Navigation -->
-        <nav class="navbar navbar-default bootsnav navbar-fixed">
-            <div class="container"> 
-                <div class="attr-nav">
-                    <ul>
-                        <li class="search"><a href="#"><i class="fa fa-search"></i></a></li>
-                    </ul>
-                </div> 
-
-                <!-- Start Header Navigation -->
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
-                        <i class="fa fa-bars"></i>
-                    </button>
-                    <a class="navbar-brand" href="#brand">
-                        <img src="assets/images/logo.png" class="logo" alt="">
-                    </a>
-                </div>
-                <!-- End Header Navigation -->
-
-                <!-- navbar menu -->
-                <div class="collapse navbar-collapse" id="navbar-menu">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#search" class="menu">제품 소비기한 조회</a></li>                    
-                        <li class="active"><a href="#look" class="menu">내 제품 소비기한 한눈에 보기</a></li>
-                        <li><a href="#print" class="menu">라벨지 출력하기</a></li>
-                        <li><a href="#calendar" class="menu">캘린더 일정 확인하기</a></li>
-                    </ul>
-                </div><!-- /.navbar-collapse -->
-            </div> 
-        </nav>
-
-        <!-- Hero Section -->
-        <section id="look" class="hero bg-black fix">
-            <div class="overlay"></div>
-            <div class="container">
-                <div class="row">
-                    <div class="main_home text-center">
-                        <div class="col-md-12">
-                            <div class="hero_text">
-                                <h1 class="text-white">내 제품 소비기한 한눈에 보기</h1>
-                                <p class="text-white">그동안 조회했던 제품들의 소비기한을 모아봤어요.</p>
-                                <a href="index.html" class="btn btn-primary m-top-20">메인화면으로 돌아가기</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Main Content Section -->
-        <section class="main-content">
-            <img src="path/to/your/image.png" alt="Product Image">
-            <div class="details">
-                <p>제조일자: 2024-03-23</p>
-                <button>눌러서 출력하기</button>
-            </div>
-        </section>
-
-        <!-- Products Section -->
-        <section class="products">
-            <div class="container">
-                <div class="row" id="product-list">
-                    <div class="col-sm-4 product-item">
-                        <div class="thumbnail">
-                            <img src="assets/images/lip.png" class="lip" alt="">
-                            <div class="caption text-center">
-                                <h3>제품 이름</h3>
-                                <p>제조일자: 2024-05-07</p>
-                                <p>소비기한: 2024-05-12 (5일)</p>
-                                <a href="#" class="btn btn-primary">캘린더에 등록하기</a>
-                                <a href="#" class="btn btn-default">소비기한 라벨지 출력하기</a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End of product item -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer id="contact" class="footer action-lage bg-black p-top-80">
-            <div class="container">
-                <div class="row">
-                    <div class="widget_area">
-                        <div class="col-md-3">
-                            <div class="widget_item widget_about">
-                                <h5 class="text-white">About Us</h5>
-                                <div class="widget_ab_item m-top-30">
-                                    <div class="item_icon"><i class="fa fa-envelope-o"></i></div>
-                                    <div class="widget_ab_item_text">
-                                        <h6 class="text-white">Email Address :</h6>
-                                        <p>youremail@mail.com</p>
-                                    </div>
-                                </div>
-                            </div><!-- End off widget item -->
-                        </div><!-- End off col-md-3 -->
-
-                    </div>
-                </div>
-            </div>
-            <div class="main_footer fix bg-mega text-center p-top-40 p-bottom-30 m-top-80">
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
                 <div class="col-md-12">
-                    <p class="wow fadeInRight" data-wow-duration="1s">
-                        Made with 
-                        <i class="fa fa-heart"></i>
-                        by 
-                        <a target="_blank" href="http://bootstrapthemes.co">Bootstrap Themes</a> 
-                        2016. All Rights Reserved
-                    </p>
+                    <p>&copy; 2024 써도 되나?</p>
                 </div>
             </div>
-        </footer>
-    </div>
+        </div>
+    </footer>
 
     <!-- JS includes -->
-    <script src="assets/js/vendor/jquery-1.11.2.min.js"></script>
-    <script src="assets/js/vendor/bootstrap.min.js"></script>
-    <script src="assets/js/owl.carousel.min.js"></script>
-    <script src="assets/js/jquery.magnific-popup.js"></script>
-    <script src="assets/js/jquery.easing.1.3.js"></script>
-    <script src="assets/css/slick/slick.js"></script>
-    <script src="assets/css/slick/slick.min.js"></script>
-    <script src="assets/js/jquery.collapse.js"></script>
-    <script src="assets/js/bootsnav.js"></script>
-    <script src="assets/js/plugins.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
+
 </html>
