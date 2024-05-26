@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>내 제품 소비기한 한눈에 보기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .navbar {
+            background-color: #fff;
+            border-bottom: 1px solid #e7e7e7;
+        }
+        
+        .navbar-nav .nav-link {
+            color: #000;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: #6c63ff;
+        }
+        
+        .navbar-nav .nav-link.active {
+            color: #6c63ff;
+        }
+        
+        .hero {
+            background-color: #000;
+            color: #fff;
+            padding: 50px 0;
+            text-align: center;
+        }
+        
+        .hero img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        
+        .product-details {
+            color: #fff;
+            text-align: left;
+            margin-top: 20px;
+        }
+        
+        .btn-primary {
+            background-color: #6c63ff;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #5548c8;
+        }
+        
+        footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">써도 되나?</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">제품 소비기한 조회</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">내 제품 소비기한 한눈에 보기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">라벨지 출력하기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">캘린더 일정 확인하기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary text-white" href="#">Login</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <!-- 수정할 수 있는 이미지 부분 -->
+                    <img src="assets/images/Medicine.png" alt="Product Image">
+                </div>
+                <div class="col-md-4 product-details">
+                    <!-- 수정할 수 있는 제품 정보 부분 -->
+                    <h3>체리맛 감기약</h3>
+                    <p>제조일자: 2024-03-23</p>
+                    <p>소비기한: 2025-03-23</p>
+                    <!-- 버튼 -->
+                    <a href="#" class="btn btn-primary btn-block">눌러서 출력하기</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>&copy; 2024 써도 되나?</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS includes -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+
+</html>
