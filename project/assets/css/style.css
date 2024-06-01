@@ -1,41 +1,14 @@
 
-
-/*
-Author: Bootstrap Themes
-Author URI: http://bootstrapthemes.co
-*/
-
-/*==========================================
- 01.  PREDIFINEED (FROM 1 TO 780 )
- 02.  PRELOADER - LINE NO 786
- 03.  NAVIGATION - LINE NO 930
- 04.  HOME - LINE NO 1150
- 05.  THU FEATURE - LINE NO 1280
- 06.  THU FLIDE - LINE NO 1355
- 07.  THU SERVICE - LINE NO 1385
- 08.  PORTFOLIO - LINE NO 1444
- 09.  THU SOLUTION - LINE NO 1620
- 10.  THU TEAM - LINE NO 1658
- 11.  THU CLIENTS FEEDBACK - LINE NO 1730
- 12. THU BLOG - LINE NO 1848
- 13. THU SUBCRIBS - LINE NO 1935
- 14. FOOTER - LINE NO 2020
-==========================================*/
-
-
-/* ==========================================================================
-   Author's custom styles
-   ========================================================================== */
 html,
 body {
     font-size: 14px;
     color: #797979;
     width: 100%;
+    height: 100%;
     padding: 0;
     margin-left: 0;
     margin-right: 0;
     font-weight: 400;
-    width:100%;
     font-family: 'Raleway', sans-serif;
 }
 
@@ -48,23 +21,12 @@ body {
 @-o-viewport { width: device-width; }
 @viewport { width: device-width; }
 
-/*
-    Page Content
-------------------------------------------*/
+
 
 .page-content, 
 section { overflow: hidden; }
 
-/*
-    On Scroll Animations 
-------------------------------------------*/
 
-/*.animated { visibility: hidden; }
-.visible { visibility: visible; }*/
-
-/*
-    Spacing & Alignment 
-------------------------------------------*/
 
 .roomy-100 {
     padding-top: 100px;
@@ -308,12 +270,14 @@ ul{
 /*all overlay*/
 
 .overlay {
-    background-color: rgba(41, 39, 34, 0.50);
     width: 100%;
     height:100%;
     position: absolute;
     left:0;
     top: 0;
+    bottom: 0;
+    background-color: #000;
+    opacity: 80%;
 }
 
 
@@ -360,13 +324,21 @@ Separator
 /*
 Button
 */
+
+.btn > h3{
+    font-weight: 800;
+    text-align: center;
+    margin-top: 10px;
+    border-style: none;
+}
+
 .btn{
     -webkit-transition: all 0.6s;
     transition: all 0.6s;
     font-size:14px;
-    font-weight: 600;
-    border:1px solid;
+    font-weight: 800;
     padding: 1rem 4rem;
+    border-radius: 10px;
 }
 .btn-primary{
     color: #fff;
@@ -824,29 +796,41 @@ textarea::-ms-input-placeholder{
 Nav Menu style
 ==================*/
 
+.navbar{
+    position: fixed;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 .navbar-brand {
-    padding: 25px 15px;
+    padding: 20px 20px;
 }
 .navbar-brand > img {
     display: block;
     width: 80%;
 }
 .menu {
-    color: black;
-}
 
+    font-size: 100%;
+}
+.active{
+    color: #562BFF;
+}
 
 /*
 Home Section style
 ==================*/
 
 .home{
-    background: url(../images/home-bg.jpg) no-repeat scroll  center center;
-    background-size: cover;
-    position: relative;
-    padding-top: 300px;
-    padding-bottom: 190px;
+    position: absolute;
+    height: 100%;
     width:100%;
+    background-image: url(../images/home-bg.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.home_text{
+    padding-top: 40%;
 }
 .main_home .home_text h2{
     font-size:36px;
@@ -1018,5 +1002,17 @@ Home Section style
 }
 
 .contant {
+    width: 100%;
     background-color: #fff;
+}
+
+footer{
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+
+.col-auto{
+    width: 300px;
+    float: left;
 }
