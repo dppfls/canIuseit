@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ### Can I Use It ?
 </br>
 team - Already 3rd grade </br>
