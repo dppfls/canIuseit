@@ -9,6 +9,7 @@ require('./config/passport-setup');
 
 const app = express();
 
+
 // 세션 설정
 app.use(session({
   secret: process.env.SESSION_SECRET,
