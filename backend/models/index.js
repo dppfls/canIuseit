@@ -14,3 +14,4 @@ const initDb = async () => {
 };
 
 module.exports = { sequelize, initDb, Category };
+
