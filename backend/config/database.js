@@ -1,10 +1,11 @@
 const { Sequelize } = require('sequelize');
+require('dotenv').config();
 
-// 변경해야할 것 같음!
-const sequelize = new Sequelize('database', 'username', 'password', {
-  host: 'localhost',  
-  dialect: 'mysql',
+const sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_USERNAME, process.env.DATABASE_PASSWORD, {
+  host: process.env.DATABASE_HOST,
+  dialect: process.env.DATABASE_DIALECT,
   logging: false,
 });
 
 module.exports = sequelize;
+
