@@ -7,6 +7,8 @@ const fs = require('fs');
 const FileStore = require('session-file-store')(session);
 const dotenv = require("dotenv");
 dotenv.config();
+const cors = require('cors');
+const flash = require("connect-flash");
 
 const authRoutes = require("./routes/auth");
 const expirationRoutes = require("./routes/expiration");
@@ -15,6 +17,11 @@ const initDb = require("./models/initDb");
 require("./config/passport-setup");
 
 const app = express();
+
+// CORS 설정
+app.use(cors({
+    origin: 'http://localhost:8080',
+}));
 
 // 세션 설정
 app.use(session({
@@ -31,6 +38,14 @@ app.use(passport.session());
 // Body Parser 미들웨어 설정
 app.use(bodyParser.json());
 
+// 플래시 메시지 설정
+app.use(flash());
+app.use((req, res, next) => {
+    res.locals.successMessages = req.flash('success');
+    res.locals.errorMessages = req.flash('error');
+    next();
+});
+
 // 라우트 설정
 app.use('/auth', authRoutes);
 app.use('/api', expirationRoutes);
@@ -43,13 +58,6 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// 프로필 라우트 설정
-app.get('/profile', (req, res) => {
-    if (!req.isAuthenticated()) {
-        return res.redirect('/');
-    }
-    res.send(`<h1>Profile Page</h1><p>${JSON.stringify(req.user)}</p>`);
-});
 
 const PORT = process.env.PORT || 3000;
 
@@ -67,4 +75,3 @@ const startServer = async () => {
 };
 
 startServer();
-
