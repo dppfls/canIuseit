@@ -14,9 +14,4 @@ const initDb = async () => {
   ]);
 };
 
-<<<<<<< HEAD
 module.exports = { sequelize, initDb, Category, User };
-=======
-module.exports = { sequelize, initDb, Category };
->>>>>>> a9f0e471136dad143770fbfaeceb706b52a86db3
-
