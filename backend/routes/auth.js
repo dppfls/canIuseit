@@ -1,31 +1,22 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
+const authController = require('../controllers/authController');
 
 // Google 로그인 라우트
-router.get('/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] })
-);
+router.get('/google', authController.googleLogin);
 
-router.get('/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
-  (req, res) => {
-    // 성공했을 때 리디렉션
-    res.redirect('/profile');
-  }
+router.get('/google/callback', 
+    authController.googleCallback,
+    authController.googleCallbackSuccess
 );
 
 // Naver 로그인 라우트
-router.get('/naver',
-  passport.authenticate('naver')
-);
+router.get('/naver', authController.naverLogin);
 
-router.get('/naver/callback',
-  passport.authenticate('naver', { failureRedirect: '/' }),
-  (req, res) => {
-    // 성공했을 때 리디렉션
-    res.redirect('/profile');
-  }
+router.get('/naver/callback', 
+    authController.naverCallback,
+    authController.naverCallbackSuccess
 );
 
 module.exports = router;
