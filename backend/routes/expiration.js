@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { calculateExpirationDate } = require('../controllers/expirationController');
+const expirationController = require('../controllers/expirationController');
 
-router.post('/calculate-expiration', calculateExpirationDate);
+// 제품 추가
+router.post('/products', expirationController.addProduct);
+
+// 제품 조회
+router.get('/products', expirationController.getProducts);
 
 module.exports = router;
-

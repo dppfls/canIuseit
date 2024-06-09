@@ -1,20 +1,20 @@
-const express = require("express");
-const session = require("express-session");
-const passport = require("passport");
-const bodyParser = require("body-parser");
-const path = require("path");
+const express = require('express');
+const session = require('express-session');
+const passport = require('passport');
+const bodyParser = require('body-parser');
+const path = require('path');
 const fs = require('fs');
 const FileStore = require('session-file-store')(session);
-const dotenv = require("dotenv");
+const dotenv = require('dotenv');
 dotenv.config();
 const cors = require('cors');
-const flash = require("connect-flash");
+const flash = require('connect-flash');
 
-const authRoutes = require("./routes/auth");
-const expirationRoutes = require("./routes/expiration");
-const sequelize = require("./models/sequelize");
-const initDb = require("./models/initDb");
-require("./config/passport-setup");
+const authRoutes = require('./routes/auth');
+const expirationRoutes = require('./routes/expiration');
+const sequelize = require('./models/sequelize');
+const initDb = require('./models/initDb');
+require('./config/passport-setup');
 
 const app = express();
 
@@ -57,7 +57,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-
 
 const PORT = process.env.PORT || 3000;
 
