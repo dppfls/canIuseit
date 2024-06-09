@@ -1,6 +1,5 @@
-// models/User.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // 나중에 다시 경로 확인
+const sequelize = require('../config/database'); 
 
 const User = sequelize.define('User', {
   googleId: {
@@ -11,8 +10,6 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     unique: true
   },
-  // 추가적으로 사용자 정보 정의 가능
 });
 
 module.exports = User;
-
