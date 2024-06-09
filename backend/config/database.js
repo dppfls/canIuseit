@@ -8,4 +8,3 @@ const sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_
 });
 
 module.exports = sequelize;
-
