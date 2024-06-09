@@ -7,7 +7,12 @@ exports.googleLogin = passport.authenticate('google', { scope: ['profile', 'emai
 exports.googleCallback = passport.authenticate('google', { failureRedirect: '/' });
 
 exports.googleCallbackSuccess = (req, res) => {
-    res.redirect('/profile');
+  req.login(req.user, (err) => {
+    if (err) {
+      return res.redirect('/');
+    }
+    return res.redirect('/profile');
+  });
 };
 
 // 네이버 로그인 처리
@@ -17,6 +22,10 @@ exports.naverLogin = passport.authenticate('naver');
 exports.naverCallback = passport.authenticate('naver', { failureRedirect: '/' });
 
 exports.naverCallbackSuccess = (req, res) => {
-    res.redirect('/profile');
+  req.login(req.user, (err) => {
+    if (err) {
+      return res.redirect('/');
+    }
+    return res.redirect('/profile');
+  });
 };
-
