@@ -2,6 +2,18 @@
 // 사용자가 기준 정보를 직접 입력하면
 // 그 기준 값을 바탕으로 출력
 
+/* 예상 예시 데이터 - 준희
+{
+  "name": "Milk",
+  "manufactureDate": "2023-06-01",
+  "shelfLifeDays": 10,
+  "category": 1,  // 드롭다운에서 사용자가 선택한 카테고리를 번호로 처리
+  "openedDate": "2023-06-05"
+}
+
+*/
+
+
 const { Product, Category } = require('../models');
 
 // 소비기한 계산 함수
@@ -19,6 +31,7 @@ exports.addProduct = async (req, res) => {
 
     // 사용자가 shelfLifeDays를 제공하지 않은 경우
     if (!shelfLifeDays && category) {
+      // category는 사용자가 드롭다운에서 선택한 카테고리 번호
       const categoryInfo = await Category.findByPk(category);
       if (categoryInfo) {
         expirationDate = calculateExpiration(manufactureDate, categoryInfo.shelfLifeDays);
@@ -40,7 +53,7 @@ exports.addProduct = async (req, res) => {
     const product = await Product.create({ name, manufactureDate, shelfLifeDays, expirationDate, consumptionDate, category });
     res.status(201).json(product);
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while adding the product.' });
+    res.status500().json({ error: 'An error occurred while adding the product.' });
   }
 };
 
@@ -52,6 +65,8 @@ exports.getProducts = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching the products.' });
   }
 };
+
+
 
 
 /*
