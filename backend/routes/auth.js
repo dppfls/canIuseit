@@ -6,18 +6,17 @@ const authController = require('../controllers/authController');
 // Google 로그인 라우트
 router.get('/google', authController.googleLogin);
 
-router.get('/google/callback', 
-    authController.googleCallback,
-    authController.googleCallbackSuccess
+router.get('/google/callback',
+  authController.googleCallback,
+  authController.googleCallbackSuccess
 );
 
 // Naver 로그인 라우트
 router.get('/naver', authController.naverLogin);
 
-router.get('/naver/callback', 
-    authController.naverCallback,
-    authController.naverCallbackSuccess
+router.get('/naver/callback',
+  authController.naverCallback,
+  authController.naverCallbackSuccess
 );
 
 module.exports = router;
-
