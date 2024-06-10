@@ -39,14 +39,18 @@ exports.addProduct = async (req, res) => {
         let finalShelfLifeDays = shelfLifeDays;
 
         // 사용자가 shelfLifeDays를 제공하지 않은 경우 -> db에 저장된 기준 값으로 처리해야 
+        // Category 모델을 사용하여 카테고리 정보를 데이터베이스에서 가져옴
         if (!shelfLifeDays) {
             const categoryInfo = await Category.findByPk(category);
 
+            // 유효한 카테고리인지 확인
             if (!categoryInfo) {
                 return res.status(400).json({ error: '유효한 카테고리를 찾을 수 없습니다.' });
             }
 
+            // 기준 기간 설정
             finalShelfLifeDays = categoryInfo.shelfLifeDays;
+            // 소비기한 계산
             expirationDate = calculateExpiration(openedDate, finalShelfLifeDays);
         } else {
             // 사용자가 기준 기간을 입력한 경우 그 값을 이용해서 계산
