@@ -35,6 +35,14 @@ exports.addProduct = async (req, res) => {
             return res.status(400).json({ error: '이름, 개봉일자, 카테고리는 필수 입력 항목입니다.' });
         }
 
+        // 날짜 형식 유효성 검사
+        if (isNaN(new Date(openedDate))) {
+            return res.status(400).json({ error: '유효한 개봉일자를 입력하세요.' });
+        }
+        if (manufactureDate && isNaN(new Date(manufactureDate))) {
+            return res.status(400).json({ error: '유효한 제조일자를 입력하세요.' });
+        }
+
         let expirationDate;
         let finalShelfLifeDays = shelfLifeDays;
 
@@ -69,6 +77,7 @@ exports.addProduct = async (req, res) => {
 
         res.status(201).json(product);
     } catch (error) {
+        console.error("제품 추가 중 오류가 발생했습니다:", error);  // 콘솔에 오류 로그 추가
         res.status(500).json({ error: '제품 추가 중 오류가 발생했습니다.' });
     }
 };
@@ -77,9 +86,15 @@ exports.addProduct = async (req, res) => {
 // -> Product 모델 사용해서 db 모든 제품 조회 가능
 exports.getProducts = async (req, res) => {
     try {
-        const products = await Product.findAll();
+        const products = await Product.findAll({
+            include: {
+                model: Category,
+                attributes: ['name'], // 카테고리 이름 포함
+            },
+        });
         res.status(200).json(products);
     } catch (error) {
+        console.error("제품 조회 중 오류가 발생했습니다:", error);  // 콘솔에 오류 로그 추가
         res.status(500).json({ error: '제품 조회 중 오류가 발생했습니다.' });
     }
 };
