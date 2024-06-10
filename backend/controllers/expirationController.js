@@ -18,90 +18,46 @@ const { Product, Category } = require('../models');
 
 // 소비기한 계산 함수
 const calculateExpiration = (date, shelfLifeDays) => {
-  const expirationDate = new Date(date);
-  expirationDate.setDate(expirationDate.getDate() + shelfLifeDays);
-  return expirationDate;
-};
-
-exports.addProduct = async (req, res) => {
-  try {
-    const { name, manufactureDate, shelfLifeDays, category, openedDate } = req.body;
-    let expirationDate;
-    let consumptionDate;
-
-    // 사용자가 shelfLifeDays를 제공하지 않은 경우
-    if (!shelfLifeDays && category) {
-      // category는 사용자가 드롭다운에서 선택한 카테고리 번호
-      const categoryInfo = await Category.findByPk(category);
-      if (categoryInfo) {
-        expirationDate = calculateExpiration(manufactureDate, categoryInfo.shelfLifeDays);
-        if (openedDate) {
-          consumptionDate = calculateExpiration(openedDate, categoryInfo.shelfLifeDays);
-        }
-      } else {
-        return res.status(400).json({ error: 'Category not found and shelfLifeDays not provided.' });
-      }
-    } else if (shelfLifeDays) {
-      expirationDate = calculateExpiration(manufactureDate, shelfLifeDays);
-      if (openedDate) {
-        consumptionDate = calculateExpiration(openedDate, shelfLifeDays);
-      }
-    } else {
-      return res.status(400).json({ error: 'Either shelfLifeDays or category must be provided.' });
-    }
-
-    const product = await Product.create({ name, manufactureDate, shelfLifeDays, expirationDate, consumptionDate, category });
-    res.status(201).json(product);
-  } catch (error) {
-    res.status500().json({ error: 'An error occurred while adding the product.' });
-  }
-};
-
-exports.getProducts = async (req, res) => {
-  try {
-    const products = await Product.findAll();
-    res.status(200).json(products);
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while fetching the products.' });
-  }
-};
-
-
-
-
-/*
-const { Product, Category } = require('../models');
-
-// 소비기한 계산 함수
-const calculateExpiration = (manufactureDate, shelfLifeDays) => {
-    const expirationDate = new Date(manufactureDate);
+    const expirationDate = new Date(date);
     expirationDate.setDate(expirationDate.getDate() + shelfLifeDays);
     return expirationDate;
 };
 
 exports.addProduct = async (req, res) => {
     try {
-        const { name, manufactureDate, shelfLifeDays, category } = req.body;
-        let expirationDate;
+        const { name, manufactureDate, shelfLifeDays, category, openedDate } = req.body;
 
-        // 사용자가 shelfLifeDays를 제공하지 않은 경우
-        if (!shelfLifeDays && category) {
-            const categoryInfo = await Category.findOne({ where: { name: category } });
-            if (categoryInfo) {
-                expirationDate = calculateExpiration(manufactureDate, categoryInfo.defaultShelfLifeDays);
-            } else {
-                return res.status(400).json({ error: 'Category not found and shelfLifeDays not provided.' });
-            }
-        } else if (shelfLifeDays) {
-            expirationDate = calculateExpiration(manufactureDate, shelfLifeDays);
-        } else {
-            return res.status(400).json({ error: 'Either shelfLifeDays or category must be provided.' });
+        if (!name || !openedDate || !category) {
+            return res.status(400).json({ error: '이름, 개봉일자, 카테고리는 필수 입력 항목입니다.' });
         }
 
-        const product = await Product.create({ name, manufactureDate, shelfLifeDays, expirationDate, consumptionDate: expirationDate, category });
+        let expirationDate;
+        let consumptionDate;
+
+        // 사용자가 shelfLifeDays를 제공하지 않은 경우
+        if (!shelfLifeDays) {
+            const categoryInfo = await Category.findByPk(category);
+            if (!categoryInfo) {
+                return res.status(400).json({ error: '카테고리를 찾을 수 없고, 소비기한일수가 제공되지 않았습니다.' });
+            }
+
+            expirationDate = calculateExpiration(openedDate, categoryInfo.shelfLifeDays);
+        } else {
+            expirationDate = calculateExpiration(openedDate, shelfLifeDays);
+        }
+
+        const product = await Product.create({
+            name,
+            manufactureDate,
+            shelfLifeDays: shelfLifeDays || categoryInfo.shelfLifeDays,
+            expirationDate,
+            consumptionDate: expirationDate,
+            category
+        });
+
         res.status(201).json(product);
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while adding the product.' });
+        res.status(500).json({ error: '제품 추가 중 오류가 발생했습니다.' });
     }
 };
 
@@ -110,7 +66,6 @@ exports.getProducts = async (req, res) => {
         const products = await Product.findAll();
         res.status(200).json(products);
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while fetching the products.' });
+        res.status(500).json({ error: '제품 조회 중 오류가 발생했습니다.' });
     }
 };
-*/
