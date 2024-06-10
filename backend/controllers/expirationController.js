@@ -12,10 +12,9 @@
 }
 
 */
-
 // models에서 product, category 모델 가져오기
 // db의 categories, products 테이블에 해당 
-const { Product, Category } = require('../models');  
+const { Product, Category } = require('../models');
 
 // 소비기한 계산 함수
 // 개봉 날짜와 소비기간 매개변수로 받아서 더한 값을 소비기한으로 출력하기
@@ -25,45 +24,40 @@ const calculateExpiration = (date, shelfLifeDays) => {
     return expirationDate;
 };
 
-// 새 제품 추가 - 요청과 응답을 매개변수로 받는 비동기 
+// 새 제품 추가 - 요청과 응답을 매개변수로 받는 비동기 함수
 exports.addProduct = async (req, res) => {
     try {
-
-      // 요청에서 추출해야하는 정보
+        // 요청에서 추출해야 하는 정보
         const { name, manufactureDate, shelfLifeDays, category, openedDate } = req.body;
 
-      // 사용자가 제품명, 개봉일, 카테고리 입력 안 했을 경우 에러 처리
+        // 사용자가 제품명, 개봉일, 카테고리를 입력 안 했을 경우 에러 처리
         if (!name || !openedDate || !category) {
             return res.status(400).json({ error: '이름, 개봉일자, 카테고리는 필수 입력 항목입니다.' });
         }
 
         let expirationDate;
-        let consumptionDate; 
 
-        // 사용자가 shelfLifeDays를 제공하지 않은 경우 -> db에 저장된 기준 값으로 처리해야함
+        // 사용자가 shelfLifeDays를 제공하지 않은 경우 -> db에 저장된 기준 값으로 처리해야 
         if (!shelfLifeDays) {
             const categoryInfo = await Category.findByPk(category);
-          /*
-          // 위에서 이미 에러처리 한 것 같음
-            if (!categoryInfo) { // 사용자가 카테고리를 선택하지 않은 경우
-                return res.status(400).json({ error: '카테고리를 찾을 수 없고, 소비기한일수가 제공되지 않았습니다.' });
+
+            if (!categoryInfo) {
+                return res.status(400).json({ error: '유효한 카테고리를 찾을 수 없습니다.' });
             }
-            
-            */
-            
+
             expirationDate = calculateExpiration(openedDate, categoryInfo.shelfLifeDays);
         } else {
-          // 사용자가 기준 기간을 입력한 경우 그 값을 이용해서 계산
+            // 사용자가 기준 기간을 입력한 경우 그 값을 이용해서 계산
             expirationDate = calculateExpiration(openedDate, shelfLifeDays);
         }
 
-      // 새로운 제품을 db에 생성
+        // 새로운 제품을 db에 생성
+        
         const product = await Product.create({
             name,
             manufactureDate,
             shelfLifeDays: shelfLifeDays || categoryInfo.shelfLifeDays,
             expirationDate,
-            consumptionDate: expirationDate,
             category
         });
 
@@ -73,7 +67,8 @@ exports.addProduct = async (req, res) => {
     }
 };
 
-// 모든 제품을 조회하고 리턴하는 비동기 함수 -> Product 모델 사용해서 db 모든 제품 조회 가능
+// 모든 제품을 조회하고 리턴하는 비동기 함수
+// -> Product 모델 사용해서 db 모든 제품 조회 가능
 exports.getProducts = async (req, res) => {
     try {
         const products = await Product.findAll();
