@@ -2,7 +2,7 @@
 
 controllers/expirationController.js
 
-// 소비기한 계산 함
+// 소비기한 계산 함ㅅ ㅜ
 const calculateExpiration = (date, shelfLifeDays) => {
     const expirationDate = new Date(date);
     expirationDate.setDate(expirationDate.getDate() + shelfLifeDays);
