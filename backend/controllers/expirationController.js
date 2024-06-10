@@ -36,6 +36,7 @@ exports.addProduct = async (req, res) => {
         }
 
         let expirationDate;
+        let finalShelfLifeDays = shelfLifeDays;
 
         // 사용자가 shelfLifeDays를 제공하지 않은 경우 -> db에 저장된 기준 값으로 처리해야 
         if (!shelfLifeDays) {
@@ -45,20 +46,21 @@ exports.addProduct = async (req, res) => {
                 return res.status(400).json({ error: '유효한 카테고리를 찾을 수 없습니다.' });
             }
 
-            expirationDate = calculateExpiration(openedDate, categoryInfo.shelfLifeDays);
+            finalShelfLifeDays = categoryInfo.shelfLifeDays;
+            expirationDate = calculateExpiration(openedDate, finalShelfLifeDays);
         } else {
             // 사용자가 기준 기간을 입력한 경우 그 값을 이용해서 계산
             expirationDate = calculateExpiration(openedDate, shelfLifeDays);
         }
 
         // 새로운 제품을 db에 생성
-        
         const product = await Product.create({
             name,
             manufactureDate,
-            shelfLifeDays: shelfLifeDays || categoryInfo.shelfLifeDays,
+            shelfLifeDays: finalShelfLifeDays,
             expirationDate,
-            category
+            category,
+            openedDate  // openedDate를 추가
         });
 
         res.status(201).json(product);
