@@ -16,7 +16,7 @@
 */
 // models에서 product, category 모델 가져오기
 // db의 categories, products 테이블에 해당 
-const { Product, Category } = require('../models');
+const { Category, Product } = require('../models/initDb');
 
 // 소비기한 계산 함수
 // 개봉 날짜와 소비기간 매개변수로 받아서 더한 값을 소비기한으로 출력하기
