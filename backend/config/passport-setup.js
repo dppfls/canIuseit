@@ -11,9 +11,15 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  User.findByPk(id).then((user) => {
-    done(null, user);
-  }).catch(err => done(err, null));
+  console.log('Deserialize User ID:', id);
+  User.findByPk(id)
+    .then((user) => {
+      done(null, user);
+    })
+    .catch(err => {
+      console.error('Error deserializing user:', err);
+      done(err, null);
+    });
 });
 
 // Google Strategy 설정
@@ -23,10 +29,10 @@ passport.use(new GoogleStrategy({
   callbackURL: process.env.GOOGLE_CALLBACK_URL || '/auth/google/callback'
 }, async (accessToken, refreshToken, profile, done) => {
   try {
-    let user = await User.findOne({ where: { googleId: profile.id } });
-    if (!user) {
-      user = await User.create({ googleId: profile.id });
-    }
+    let [user, created] = await User.findOrCreate({
+      where: { googleId: profile.id },
+      defaults: { googleId: profile.id }
+    });
     done(null, user);
   } catch (err) {
     done(err, null);
@@ -40,10 +46,10 @@ passport.use(new NaverStrategy({
   callbackURL: process.env.NAVER_CALLBACK_URL || '/auth/naver/callback'
 }, async (accessToken, refreshToken, profile, done) => {
   try {
-    let user = await User.findOne({ where: { naverId: profile.id } });
-    if (!user) {
-      user = await User.create({ naverId: profile.id });
-    }
+    let [user, created] = await User.findOrCreate({
+      where: { googleId: profile.id },
+      defaults: { googleId: profile.id }
+    });
     done(null, user);
   } catch (err) {
     done(err, null);
