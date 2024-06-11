@@ -10,7 +10,8 @@ const sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_
 
 const sequelize = new Sequelize('canIuseit_db', 'canI', 'cancanii!', {
     host: 'localhost',
-    dialect: 'mysql'
+	port: 3306,
+	dialect: 'mysql'
 });
 
 module.exports = sequelize;

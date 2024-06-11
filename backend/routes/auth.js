@@ -20,3 +20,4 @@ router.get('/naver/callback',
 );
 
 module.exports = router;
+
