@@ -49,7 +49,6 @@ app.use((req, res, next) => {
 app.use('/auth', authRoutes);
 app.use('/api', expirationRoutes);
 
-
 // 정적 파일 제공 설정
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'resources')));
 
@@ -85,7 +84,7 @@ const startServer = async () => {
         await sequelize.authenticate();
         console.log('Connection has been established successfully.');
         await initDb();
-        app.listen(PORT, () => {
+        app.listen(PORT, '0.0.0.0', () => {
             console.log(`Server is running on port ${PORT}`);
         });
     } catch (error) {
@@ -94,3 +93,4 @@ const startServer = async () => {
 };
 
 startServer();
+
