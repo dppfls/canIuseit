@@ -22,12 +22,19 @@ app.use(cors({
     origin: 'http://localhost:8000',
 }));
 
-// 세션 설정
+const sessionFilePath = process.env.SESSION_FILE_STORE_PATH || path.join(__dirname, 'sessions');
+
+if (!fs.existsSync(sessionFilePath)) {
+    fs.mkdirSync(sessionFilePath, { recursive: true });
+}
+
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'default_secret',
+    secret: process.env.JWT_SECRET || 'default_secret',
     resave: false,
     saveUninitialized: false,
-    store: new FileStore()
+    store: new FileStore({
+        path: sessionFilePath
+    })
 }));
 
 // Passport 미들웨어 설정
