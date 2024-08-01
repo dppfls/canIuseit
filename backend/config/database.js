@@ -1,17 +1,17 @@
+//환경변수 사용하는 코드 써야함!!
 const { Sequelize } = require('sequelize');
-/*
 require('dotenv').config();
-const sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_USERNAME, process.env.DATABASE_PASSWORD, {
-  host: process.env.DATABASE_HOST,
-  dialect: process.env.DATABASE_DIALECT,
-  logging: false,
-});
-*/
 
-const sequelize = new Sequelize('canIuseit_db', 'canI', 'cancanii!', {
-    host: 'localhost',
-	port: 3306,
-	dialect: 'mysql'
-});
+const sequelize = new Sequelize(
+  process.env.DATABASE_NAME, 
+  process.env.DATABASE_USERNAME, 
+  process.env.DATABASE_PASSWORD, 
+  {
+    host: process.env.DATABASE_HOST,
+    port: process.env.DATABASE_PORT,
+    dialect: process.env.DATABASE_DIALECT,
+    logging: false,
+  }
+);
 
 module.exports = sequelize;
