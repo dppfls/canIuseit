@@ -6,11 +6,11 @@ const NaverStrategy = require('passport-naver').Strategy;
 const User = require('../models/User');
 require('dotenv').config();
 
-passport.serializeUser((user, done) => {
+passport.serializeUser((user, done) => { //사용자 정보를 세션에 저장
   done(null, user.id);
 });
 
-passport.deserializeUser((id, done) => {
+passport.deserializeUser((id, done) => { //사용자가 인증된 후, 각 요청에서 세션에 저장된 사용자 정보를 불러옴
   console.log('Deserialize User ID:', id);
   User.findByPk(id)
     .then((user) => {
@@ -47,8 +47,8 @@ passport.use(new NaverStrategy({
 }, async (accessToken, refreshToken, profile, done) => {
   try {
     let [user, created] = await User.findOrCreate({
-      where: { googleId: profile.id },
-      defaults: { googleId: profile.id }
+      where: { naverId: profile.id },
+      defaults: { naverId: profile.id }
     });
     done(null, user);
   } catch (err) {

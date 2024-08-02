@@ -1,13 +1,14 @@
-const jwt = require('jsonwebtoken');
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 class User extends Model {
   generateJwt() {
-    const payload = { id: this.id, email: this.email };
+    const payload = { id: this.id };
     return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
   }
-  
+
   static async hashPassword(password) {
     return await bcrypt.hash(password, 10);
   }
@@ -18,10 +19,17 @@ class User extends Model {
 }
 
 User.init({
-  googleId: DataTypes.STRING,
-  naverId: DataTypes.STRING,
-  email: DataTypes.STRING,
+  googleId: {
+    type: DataTypes.STRING,
+    unique: true,
+  },
+  naverId: {
+    type: DataTypes.STRING,
+    unique: true,
+  },
+  username: {
+    type: DataTypes.STRING,
+  }
 }, { sequelize, modelName: 'user' });
 
 module.exports = User;
-
