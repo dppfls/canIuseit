@@ -11,13 +11,14 @@ const authRoutes = require('./routes/auth');
 const expirationRoutes = require('./routes/expiration');
 const sequelize = require('./config/database');
 const { initDb } = require('./models/initDb');
+const { ensureAuthenticated } = require('./middleware/authMid');
 require('./config/passport-setup');
 
 const app = express();
 
 // CORS 설정
 app.use(cors({
-    origin: 'http://localhost:8000',
+    origin: 'http://localhost:3000', // 올바른 origin 설정
 }));
 
 // 세션 설정
@@ -61,19 +62,23 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '..', 'frontend', 'views'));
 
 // 기본 라우트 설정
-app.get('/', (req, res) => {
+app.get('/', ensureAuthenticated, (req, res) => {
     res.render('index');
 });
-app.get('/look', (req, res) => {
+
+app.get('/look', ensureAuthenticated, (req, res) => {
     res.render('look'); 
 });
-app.get('/calendar', (req, res) => {
+
+app.get('/calendar', ensureAuthenticated, (req, res) => {
     res.render('calendar'); 
 });
+
 app.get('/login', (req, res) => {
     res.render('login'); 
 });
-app.get('/label', (req, res) => {
+
+app.get('/label', ensureAuthenticated, (req, res) => {
     res.render('label'); 
 });
 
