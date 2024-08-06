@@ -8,7 +8,7 @@ exports.googleCallback = passport.authenticate('google', { failureRedirect: '/' 
 exports.googleCallbackSuccess = (req, res) => {
   req.login(req.user, (err) => {
     if (err) {
-      return res.redirect('/');
+      return res.redirect('/login');
     }
     const token = req.user.generateJwt();
 	   // JWT 토큰을 쿼리 파라미터로 전달
@@ -25,10 +25,10 @@ exports.naverCallback = passport.authenticate('naver', { failureRedirect: '/' })
 exports.naverCallbackSuccess = (req, res) => {
   req.login(req.user, (err) => {
     if (err) {
-      return res.redirect('/');
+      return res.redirect('/login');
     }
     const token = req.user.generateJwt();
-    return res.redirect(`http://localhost:3000`);
+    return res.redirect(`http://localhost:3000?token=${token}`);
   });
 };
 // 사용자 정보 반환
