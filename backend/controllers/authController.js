@@ -8,8 +8,7 @@ exports.googleCallback = passport.authenticate('google', { failureRedirect: '/' 
 exports.googleCallbackSuccess = (req, res) => {
   req.login(req.user, (err) => {
     if (err) {
-    console.error('Login error:', err);
-    return res.redirect('/login');
+      return res.redirect('/login');
     }
 
     return res.redirect('/'); // 로그인 후 메인 페이지로 리다이렉트
@@ -27,8 +26,7 @@ exports.naverCallback = passport.authenticate('naver', { failureRedirect: '/' })
 exports.naverCallbackSuccess = (req, res) => {
   req.login(req.user, (err) => {
     if (err) {
-        console.error('Login error:', err);
-        return res.redirect('/login');
+      return res.redirect('/login');
     }
     return res.redirect(`http://localhost:3000`);
   });
