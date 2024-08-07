@@ -24,8 +24,16 @@ window.onload = function() {
 };
 
 function logout() {
-  localStorage.removeItem('oauthToken');
-  window.location.href = '/login';
+  console.log('Logout button clicked'); // 로그아웃 버튼 클릭 로그
+  fetch('/auth/logout')
+    .then(response => {
+      if (response.redirected) {
+        window.location.href = response.url;
+      } else {
+        console.error('Failed to log out');
+      }
+    })
+    .catch(error => console.error('Error:', error));
 }
 
 function fetchWithAuth(url, options = {}) {
