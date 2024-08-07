@@ -31,10 +31,23 @@ passport.use(new GoogleStrategy({
   callbackURL: process.env.GOOGLE_CALLBACK_URL || '/auth/google/callback'
 }, async (accessToken, refreshToken, profile, done) => {
   try {
+    const { id, displayName, emails, photos } = profile;
+    const email = emails && emails[0].value;
+    const profilePhoto = photos && photos[0].value;
+
     let [user, created] = await User.findOrCreate({
       where: { googleId: profile.id },
       defaults: { googleId: profile.id }
     });
+
+    if (!created) {
+      // 사용자 정보 업데이트 (선택 사항)
+      user.name = displayName;
+      user.email = email;
+      user.profilePhoto = profilePhoto;
+      await user.save();
+    }
+
     done(null, user);
   } catch (err) {
     console.error('Error in GoogleStrategy:', err); // 에러 로깅 추가
@@ -49,13 +62,28 @@ passport.use(new NaverStrategy({
   callbackURL: process.env.NAVER_CALLBACK_URL || '/auth/naver/callback'
 }, async (accessToken, refreshToken, profile, done) => {
   try {
+    const { id, displayName, emails, photos } = profile;
+    const email = emails && emails[0].value;
+    const profilePhoto = photos && photos[0].value;
+
     let [user, created] = await User.findOrCreate({
       where: { naverId: profile.id },
       defaults: { naverId: profile.id }
     });
+
+    if (!created) {
+      // 사용자 정보 업데이트 (선택 사항)
+      user.name = displayName;
+      user.email = email;
+      user.profilePhoto = profilePhoto;
+      await user.save();
+    }
+
     done(null, user);
   } catch (err) {
     console.error('Error in NaverStrategy:', err); // 에러 로깅 추가
     done(err, null);
   }
 }));
+
+module.exports = passport;
