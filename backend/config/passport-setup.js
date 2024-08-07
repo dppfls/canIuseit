@@ -6,11 +6,13 @@ const NaverStrategy = require('passport-naver').Strategy;
 const User = require('../models/User');
 require('dotenv').config();
 
-passport.serializeUser((user, done) => { //사용자 정보를 세션에 저장
+passport.serializeUser((user, done) => { //로그인 최초로 성공한 사용자 정보를 세션에 저장
   done(null, user.id);
 });
 
-passport.deserializeUser((id, done) => { //사용자가 인증된 후, 각 요청에서 세션에 저장된 사용자 정보를 불러옴
+//페이지에 방문하는 모든 client에 대한 정보를 req.user 변수에 전달해주는 함수
+//사용자가 페이지 방문할 때 마다 호출됨
+passport.deserializeUser((id, done) => { 
   console.log('Deserialize User ID:', id);
   User.findByPk(id)
     .then((user) => {
@@ -35,6 +37,7 @@ passport.use(new GoogleStrategy({
     });
     done(null, user);
   } catch (err) {
+    console.error('Error in GoogleStrategy:', err); // 에러 로깅 추가
     done(err, null);
   }
 }));
@@ -52,6 +55,7 @@ passport.use(new NaverStrategy({
     });
     done(null, user);
   } catch (err) {
+    console.error('Error in NaverStrategy:', err); // 에러 로깅 추가
     done(err, null);
   }
 }));
