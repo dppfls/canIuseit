@@ -47,6 +47,7 @@ app.use(flash());
 app.use((req, res, next) => {
     res.locals.successMessages = req.flash('success');
     res.locals.errorMessages = req.flash('error');
+    res.locals.user = req.user || null; // 로그인 상태 전달
     next();
 });
 
@@ -63,23 +64,23 @@ app.set('views', path.join(__dirname, '..', 'frontend', 'views'));
 
 // 기본 라우트 설정
 app.get('/', ensureAuthenticated, (req, res) => {
-    res.render('index');
+    res.render('index', { user: req.user });
 });
 
 app.get('/look', ensureAuthenticated, (req, res) => {
-    res.render('look'); 
+    res.render('look', { user: req.user });
 });
 
 app.get('/calendar', ensureAuthenticated, (req, res) => {
-    res.render('calendar'); 
+    res.render('calendar', { user: req.user });
 });
 
 app.get('/login', (req, res) => {
-    res.render('login'); 
+    res.render('login', { user: req.user });
 });
 
 app.get('/label', ensureAuthenticated, (req, res) => {
-    res.render('label'); 
+    res.render('label', { user: req.user });
 });
 
 const PORT = process.env.PORT || 3000;

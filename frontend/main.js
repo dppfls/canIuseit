@@ -1,49 +1,35 @@
-const express = require('express');
-const path = require('path');
-const app = express();
-const port = 8000;
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-app.use(express.static(path.join(__dirname, 'resources')));
-app.get('/', (req, res) => {
-    res.render('index');
-});
-app.get('/calendar', (req, res) => {
-    res.render('calendar');
-});
-app.get('/label', (req, res) => {
-    res.render('label');
-});
-app.get('/login', (req, res) => {
-    res.render('login');
-});
-app.get('/look', (req, res) => {
-    res.render('look');
-});
-// 새로운 라우트: JWT 토큰을 통해 사용자 정보를 표시하는 라우트
-app.get('/profile', (req, res) => {
-    res.render('profile');
-});
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+// main.js
 
-
-// 로그인 성공 후 페이지 로드 시 토큰 저장 **추가
 window.onload = function() {
   const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get('token');
-  if (token) {
-    // 로컬 스토리지에 토큰 저장
-    localStorage.setItem('jwtToken', token);
-    // 토큰이 있으면 메인 페이지로 리디렉션
-    window.location.href = '/';
+  const code = urlParams.get('code');
+  if (code) {
+    // OAuth2 인증 코드를 처리하는 로직을 여기에 추가
+    fetch('/auth/google/callback?code=' + code)
+      .then(response => response.json())
+      .then(data => {
+        if (data.token) {
+          localStorage.setItem('oauthToken', data.token);
+          window.location.href = '/';
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+
+  // 로그아웃 버튼이 있는 경우 로그아웃 이벤트 리스너 추가
+  const logoutButton = document.getElementById('logoutButton');
+  if (logoutButton) {
+    logoutButton.addEventListener('click', logout);
   }
 };
 
-// 요청 시 토큰을 포함하여 인증 헤더 설정 **추가
+function logout() {
+  localStorage.removeItem('oauthToken');
+  window.location.href = '/login';
+}
+
 function fetchWithAuth(url, options = {}) {
-  const token = localStorage.getItem('jwtToken');
+  const token = localStorage.getItem('oauthToken');
   if (token) {
     options.headers = {
       ...options.headers,

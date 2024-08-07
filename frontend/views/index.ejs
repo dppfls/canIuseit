@@ -16,7 +16,6 @@
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-    
       <div class="collapse navbar-collapse m-5" id="navbarSupportedContent">
         <ul class="navbar-nav mr-5 ml-auto">
           <li class="nav-item active d-inline text-right">
@@ -32,7 +31,12 @@
             <a class="nav-link" href="/calendar">캘린더 일정 확인하기</a>
           </li>
         </ul>
-        <button class="btn btn-look" onClick="location.href='/login'">로그인</button>
+        <!-- 로그인 상태에 따라 로그인/로그아웃 버튼 표시 -->
+        <% if (user) { %>
+          <button class="btn btn-look" id="logoutButton">로그아웃</button>
+        <% } else { %>
+          <button class="btn btn-look" onClick="location.href='/login'">로그인</button>
+        <% } %>
       </div>
     </div>
   </nav>
@@ -75,5 +79,6 @@
       <p class="text-dark">Copyright(c) 2024 써도 되나?. All rights reserved.</p>
     </div>
   </footer>
+  <script src="/js/main.js"></script>
 </body>
 </html>
