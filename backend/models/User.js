@@ -1,35 +1,21 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // database 설정 파일 경로
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const User = sequelize.define('User', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
+class User extends Model {
+}
+
+User.init({
   googleId: {
     type: DataTypes.STRING,
     unique: true,
-    allowNull: true
   },
   naverId: {
     type: DataTypes.STRING,
     unique: true,
-    allowNull: true
   },
-  email: {
+  username: {
     type: DataTypes.STRING,
-    allowNull: false,
-    unique: true
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  profilePhoto: {
-    type: DataTypes.STRING,
-    allowNull: true
   }
-});
+}, { sequelize, modelName: 'user' });
 
 module.exports = User;
