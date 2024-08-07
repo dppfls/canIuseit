@@ -36,6 +36,8 @@ window.onload = function() {
   if (token) {
     // 로컬 스토리지에 토큰 저장
     localStorage.setItem('jwtToken', token);
+    // 토큰이 있으면 메인 페이지로 리디렉션
+    window.location.href = '/';
   }
 };
 
