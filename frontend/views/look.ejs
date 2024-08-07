@@ -33,7 +33,12 @@
             <a class="nav-link" href="/calendar">캘린더 일정 확인하기</a>
           </li>
         </ul>
-        <button class="btn btn-look" onClick="location.href='/login'">로그인</button>
+        <!-- 로그인 상태에 따라 로그인/로그아웃 버튼 표시 -->
+        <% if (user) { %>
+          <button class="btn btn-look" id="logoutButton">로그아웃</button>
+        <% } else { %>
+          <button class="btn btn-look" onClick="location.href='/login'">로그인</button>
+        <% } %>
       </div>
     </div>
   </nav>

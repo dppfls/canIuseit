@@ -13,11 +13,9 @@
       <a class="navbar-brand" href="/">
         <img src="/images/logo.png" alt="써도되나" title="써도되나">
       </a>
-      <!-- 모바일 버전에서 상호작용 가능한 버튼. 마우스를 올리면 메인 메뉴 보임. -->
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-    
       <div class="collapse navbar-collapse m-5" id="navbarSupportedContent">
         <ul class="navbar-nav mr-5 ml-auto">
           <li class="nav-item d-inline text-right">
@@ -33,21 +31,27 @@
             <a class="nav-link" href="/calendar">캘린더 일정 확인하기</a>
           </li>
         </ul>
-        <button class="btn btn-look" onClick="location.href='#'">로그인</button>
+        <!-- 로그인 상태에 따라 로그인/로그아웃 버튼 표시 -->
+        <% if (user) { %>
+          <button class="btn btn-look" id="logoutButton">로그아웃</button>
+        <% } else { %>
+          <button class="btn btn-look" onClick="location.href='/login'">로그인</button>
+        <% } %>
       </div>
     </div>
   </nav>
-        <div class="container-xl">
-            <div class="container">
-                <!-- Login Section -->
-                <section class="login-section">
-                    <h1>로그인</h1>
-                    <a href="/auth/google" class="btn btn-google">Google 계정으로 로그인하기</a>
-                    <a href="/auth/naver" class="btn btn-naver">NAVER 로그인하기</a>
-                    <p>By clicking continue, you agree to our Terms of Service and Privacy Policy</p>
-                </section>
-            </div>
-        </div>
+  
+  <div class="container-xl">
+    <div class="container">
+      <!-- Login Section -->
+      <section class="login-section">
+        <h1>로그인</h1>
+        <a href="/auth/google" class="btn btn-google">Google 계정으로 로그인하기</a>
+        <a href="/auth/naver" class="btn btn-naver">NAVER 로그인하기</a>
+        <p>By clicking continue, you agree to our Terms of Service and Privacy Policy</p>
+      </section>
+    </div>
+  </div>
 
   <footer id="footer">
     <div class="container-xl">
@@ -57,5 +61,7 @@
       <p class="text-dark">Copyright(c) 2024 써도 되나?. All rights reserved.</p>
     </div>
   </footer>
+
+  <script src="/js/main.js"></script>
 </body>
 </html>
