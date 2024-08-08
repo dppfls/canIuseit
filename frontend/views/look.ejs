@@ -154,5 +154,26 @@
       <p class="text-dark">Copyright(c) 2024 써도 되나?. All rights reserved.</p>
     </div>
   </footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      const logoutButton = document.getElementById('logoutButton');
+      if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+          fetch('/auth/logout', {
+            method: 'GET',
+            credentials: 'include'
+          })
+          .then(response => {
+            if (response.redirected) {
+              window.location.href = response.url;
+            }
+          })
+          .catch(error => {
+            console.error('Logout error:', error);
+          });
+        });
+      }
+    });
+  </script>
 </body>
 </html>  
