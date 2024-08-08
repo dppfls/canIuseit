@@ -63,15 +63,15 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '..', 'frontend', 'views'));
 
 // 기본 라우트 설정
-app.get('/', ensureAuthenticated, (req, res) => {
+app.get('/', (req, res) => { // ensureAuthenticated 제거
     res.render('index', { user: req.user });
 });
 
-app.get('/look', ensureAuthenticated, (req, res) => {
+app.get('/look', (req, res) => { // ensureAuthenticated 제거
     res.render('look', { user: req.user });
 });
 
-app.get('/calendar', ensureAuthenticated, (req, res) => {
+app.get('/calendar', (req, res) => { // ensureAuthenticated 제거
     res.render('calendar', { user: req.user });
 });
 
@@ -79,8 +79,13 @@ app.get('/login', (req, res) => {
     res.render('login', { user: req.user });
 });
 
-app.get('/label', ensureAuthenticated, (req, res) => {
+app.get('/label', (req, res) => { // ensureAuthenticated 제거
     res.render('label', { user: req.user });
+});
+
+// 보호된 라우트 예시 (로그인 필요)
+app.get('/protected', ensureAuthenticated, (req, res) => {
+    res.send('This is a protected route');
 });
 
 const PORT = process.env.PORT || 3000;

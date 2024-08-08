@@ -40,19 +40,18 @@
       </div>
     </div>
   </nav>
-        <div class="container-xl">
-            <div class="label-text">
-            <p class="h2 mb-0 mt-5 text-black font-weight-bolder ml-5 text-left d-block">캘린더 일정 확인하기</p>
-            <p class="h5 mt-3 mb-5 text-black text-left d-block ml-5">내 계정과 연동된 캘린더에서 소비기한을 편리하게 확인하세요.</p>
-            </div>
-        </div>
+  
+  <div class="container-xl">
+    <div class="label-text">
+      <p class="h2 mb-0 mt-5 text-black font-weight-bolder ml-5 text-left d-block">캘린더 일정 확인하기</p>
+      <p class="h5 mt-3 mb-5 text-black text-left d-block ml-5">내 계정과 연동된 캘린더에서 소비기한을 편리하게 확인하세요.</p>
+    </div>
+  </div>
 
-     <div class="container-xl mt-5">
-        <iframe src="https://calendar.google.com/calendar/embed?src=ikon0623%40gmail.com&ctz=Asia%2FSeoul" style="border: 0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
-     </div>
-
-
-    
+  <div class="container-xl mt-5">
+    <iframe src="https://calendar.google.com/calendar/embed?src=ikon0623%40gmail.com&ctz=Asia%2FSeoul" style="border: 0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
+  </div>
+  
   <footer id="footer">
     <div class="container-xl">
       <div class="line mt-5"></div>
@@ -61,5 +60,27 @@
       <p class="text-dark">Copyright(c) 2024 써도 되나?. All rights reserved.</p>
     </div>
   </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      const logoutButton = document.getElementById('logoutButton');
+      if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+          fetch('/auth/logout', {
+            method: 'GET',
+            credentials: 'include'
+          })
+          .then(response => {
+            if (response.redirected) {
+              window.location.href = response.url;
+            }
+          })
+          .catch(error => {
+            console.error('Logout error:', error);
+          });
+        });
+      }
+    });
+  </script>
 </body>
 </html>
