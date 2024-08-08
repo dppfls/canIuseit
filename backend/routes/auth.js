@@ -16,12 +16,18 @@ router.get('/protected', ensureAuthenticated, (req, res) => { // ensureAuthentic
 });
 
 // Naver 로그인 라우트
-router.get('/naver', authController.naverLogin);
+router.get('/naver', (req, res, next) => {
+  console.log('Naver login request');
+  next();
+}, authController.naverLogin);
 
-router.get('/naver/callback',
-  authController.naverCallback,
-  authController.naverCallbackSuccess
-);
+router.get('/naver/callback', (req, res, next) => {
+  console.log('Naver callback request');
+  console.log('Query:', req.query); // 추가: 쿼리 파라미터 로그
+  next();
+}, authController.naverCallback, authController.naverCallbackSuccess);
+//에러 로깅 추가
+
 
 // 로그아웃 라우트 추가
 router.get('/logout', (req, res, next) => {

@@ -26,6 +26,7 @@ exports.naverCallback = passport.authenticate('naver', { failureRedirect: '/' })
 exports.naverCallbackSuccess = (req, res) => {
   req.login(req.user, (err) => {
     if (err) {
+      console.error('Login error:', err); // 로그인 에러 로그
       return res.redirect('/login');
     }
     return res.redirect(`http://localhost:3000`);
