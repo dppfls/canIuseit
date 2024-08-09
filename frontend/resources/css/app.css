@@ -20,6 +20,14 @@
   color: white;
 }
 
+.alias-container{
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
 .category-select-container {
   position: absolute;
   top: 30%;

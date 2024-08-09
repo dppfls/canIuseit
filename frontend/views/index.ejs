@@ -46,6 +46,11 @@
       <p class="h1 mt-0 mb-3 text-white font-weight-bolder text-center d-block">소비기한이 있다는 사실을 알고 계신가요?</p>
       <p class="h2 mb-5 text-white font-weight-bolder text-center d-block">걱정마세요, '써도 되나?'가 계산해줄게요!</p>
     </div>
+      <!-- 별칭 상자와 텍스트 상자 추가 -->
+    <div class="alias-container text-center mt-3">
+      <input type="text" class="form-control" value="별칭" readonly style="margin-top: 20px; width: 300px; display: inline-block;">
+      <input type="text" class="form-control" id="aliasTextField" placeholder="별칭을 입력하세요" style="margin-top: 20px; width: 300px; display: inline-block;">
+    </div>
     <div class="category-select-container text-center">
       <select name="type" id="categorySelect" class="form-control category-select" style="border-radius: 10px; padding-left: 20px; display: inline-block; width: 300px;">
         <option value="">카테고리 선택</option>
@@ -117,6 +122,7 @@
   
   <script src="/js/main.js"></script>
   <script>
+
     document.addEventListener('DOMContentLoaded', (event) => {
       const logoutButton = document.getElementById('logoutButton');
       if (logoutButton) {
@@ -207,6 +213,45 @@
         }
       }
     }
+
+    
+    // 서버로부터 전달된 user 변수를 JavaScript에서 사용 가능하도록 설정
+    ///////*******다시 봐야 됨*****var user = <%= user ? JSON.stringify(user) : 'null' %>;
+
+    // '제품 등록하기'버튼을 누르면 데이터베이스에 저장됨
+    document.getElementById('registerButton').addEventListener('click', () => {
+      const alias = document.getElementById('aliasTextField').value;
+      const expiry_date = document.getElementById('calculatedExpiryField').value;
+      const category_id = document.getElementById('categorySelect').value; // category_id를 전송
+  
+      // POST 요청으로 서버에 데이터 전송
+      console.log('Sending POST request');  // 이 줄이 먼저 콘솔에 찍히는지 확인
+      fetch('/api/products/register-product', { // '/api/products/register-product' 경로로 변경
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              user_id: user.id,  // 로그인된 사용자 ID
+              alias: alias,
+              expiry_date: expiry_date,
+              category_id: category_id
+          }),
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              alert('Product registered successfully!');
+          } else {
+              alert('Failed to register product.');
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+      });
+      
+  });
+  
   </script>
 </body>
 </html>
