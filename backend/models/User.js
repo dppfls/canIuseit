@@ -13,9 +13,13 @@ User.init({
     type: DataTypes.STRING,
     unique: true,
   },
+  provider: {
+    type: DataTypes.STRING,
+    },  // provider 필드 추가
   username: {
     type: DataTypes.STRING,
   }
+  
 }, { sequelize, modelName: 'user' });
 
 module.exports = User;
