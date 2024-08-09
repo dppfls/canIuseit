@@ -161,6 +161,33 @@
   width: 200px;
 }
 
+/* FullCalendar 관련 스타일 */
+.fc {
+  direction: ltr;
+  text-align: left;
+}
+
+.fc-header-toolbar {
+  padding-top: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+/* 달력의 전체 스타일 조정 */
+#calendar-container {
+  margin-top: 2em;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 화면에 맞게 달력 크기 조정 */
+#calendar {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
 /* 모바일 버전 헤더 영역 */
 .navbar-toggler:hover + .navbar-collapse {
   display: block !important;
