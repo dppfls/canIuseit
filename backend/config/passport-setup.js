@@ -33,11 +33,14 @@ passport.use(new GoogleStrategy({
   try {
     let [user, created] = await User.findOrCreate({
       where: { googleId: profile.id },
-      defaults: { googleId: profile.id }
+      defaults: {
+        googleId: profile.id,
+        provider: 'google'  // 로그인 플랫폼 정보 저장
+      }
     });
     done(null, user);
   } catch (err) {
-    console.error('Error in GoogleStrategy:', err); // 에러 로깅 추가
+    console.error('Error in GoogleStrategy:', err);
     done(err, null);
   }
 }));
@@ -51,11 +54,14 @@ passport.use(new NaverStrategy({
   try {
     let [user, created] = await User.findOrCreate({
       where: { naverId: profile.id },
-      defaults: { naverId: profile.id }
+      defaults: {
+        naverId: profile.id,
+        provider: 'naver'  // 로그인 플랫폼 정보 저장
+      }
     });
     done(null, user);
   } catch (err) {
-    console.error('Error in NaverStrategy:', err); // 에러 로깅 추가
+    console.error('Error in NaverStrategy:', err);
     done(err, null);
   }
 }));

@@ -71,9 +71,11 @@ app.get('/look', (req, res) => { // ensureAuthenticated 제거
     res.render('look', { user: req.user });
 });
 
-app.get('/calendar', (req, res) => { // ensureAuthenticated 제거
+app.get('/calendar', (req, res) => {
+    console.log('Calendar Route User:', req.user);  // req.user 객체 출력 로그 추가
     res.render('calendar', { user: req.user });
 });
+
 
 app.get('/login', (req, res) => {
     res.render('login', { user: req.user });

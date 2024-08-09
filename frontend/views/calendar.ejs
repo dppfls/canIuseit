@@ -49,9 +49,17 @@
   </div>
 
   <div class="container-xl mt-5">
-    <iframe src="https://calendar.google.com/calendar/embed?src=ikon0623%40gmail.com&ctz=Asia%2FSeoul" style="border: 0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
-  </div>
-  
+    <% if (user && user.provider === 'google') { %>
+      <!-- 구글 캘린더 iframe -->
+      <iframe src="https://calendar.google.com/calendar/embed?src=<%= user.email %>&ctz=Asia%2FSeoul" style="border: 0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
+    <% } else if (user && user.provider === 'naver') { %>
+      <!-- 네이버 캘린더 iframe -->
+      <iframe src="https://calendar.naver.com/embed?src=<%= user.email %>&ctz=Asia%2FSeoul" style="border: 0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
+    <% } else { %>
+      <p class="text-center">캘린더를 표시할 수 없습니다. 계정 연동이 필요합니다.</p>
+    <% } %>
+  </div>  
+
   <footer id="footer">
     <div class="container-xl">
       <div class="line mt-5"></div>
@@ -60,6 +68,11 @@
       <p class="text-dark">Copyright(c) 2024 써도 되나?. All rights reserved.</p>
     </div>
   </footer>
+
+  <!-- 사용자 provider 정보 출력 -->
+  <script>
+    console.log('User provider:', '<%= user ? user.provider : "No User" %>');
+  </script>
 
   <script>
     document.addEventListener('DOMContentLoaded', (event) => {
