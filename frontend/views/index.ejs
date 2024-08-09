@@ -60,43 +60,44 @@
       <div class="field" id="generalFields" style="display: none;">
         <div>
           <input type="text" class="form-control" value="유통기한" readonly style="margin-top: 20px; width: 300px; display: inline-block;">
-          <input type="date" class="form-control" style="margin-top: 20px; width: 300px; display: inline-block;">
+          <input type="date" class="form-control" id="expiryDateField" style="margin-top: 20px; width: 300px; display: inline-block;" onchange="calculateExpiryDate()">
         </div>
         <div>
           <input type="text" class="form-control" value="개봉일자" readonly style="margin-top: 20px; width: 300px; display: inline-block;">
-          <input type="date" class="form-control" style="margin-top: 20px; width: 300px; display: inline-block;">
+          <input type="date" class="form-control" id="openDateField" style="margin-top: 20px; width: 300px; display: inline-block;" onchange="calculateExpiryDate()">
         </div>
         <div>
           <input type="text" class="form-control" value="소비기간" readonly style="margin-top: 20px; width: 300px; display: inline-block;">
-          <select class="form-control" id="makeupField" style="margin-top: 20px; width: 300px; display: inline-block;">
+          <select class="form-control" id="makeupField" style="margin-top: 20px; width: 300px; display: inline-block;" onchange="autoSelectOptions()">
+            <option value="">화장품 카테고리 선택</option>
             <option value="기초 화장품">기초 화장품</option>
             <option value="클렌저">클렌저</option>
             <option value="선크림">선크림</option>
           </select>
-          <select class="form-control" style="margin-top: 20px; width: 300px; display: inline-block;">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-          </select>
-          <select class="form-control" style="margin-top: 20px; width: 300px; display: inline-block;">
-            <option value="Month">Month</option>
-            <option value="Year">Year</option>
-          </select>
+          <input list="quantityOptions" id="quantityField" class="form-control" style="margin-top: 20px; width: 300px; display: inline-block;" onchange="calculateExpiryDate()">
+          <datalist id="quantityOptions">
+            <option value="1Month">
+            <option value="2Month">
+            <option value="3Month">
+            <option value="4Month">
+            <option value="5Month">
+            <option value="6Month">
+            <option value="7Month">
+            <option value="8Month">
+            <option value="9Month">
+            <option value="10Month">
+            <option value="11Month">
+            <option value="1Year">
+            <option value="18Month">
+            <option value="2Year">
+            <option value="3Year">
+          </datalist>
         </div>
         <h3 style="font-size: 30px; color: white; margin-top: 20px; width: 300px; display: inline-block;">▶</h3>
       </div>
       <div class="field" id="expiryField">
         <input type="text" class="form-control" value="소비기한" readonly style="margin-top: 20px; width: 300px; display: inline-block;">
-        <input type="date" class="form-control" style="margin-top: 20px; width: 300px; display: inline-block;">
+        <input type="date" class="form-control" id="calculatedExpiryField" style="margin-top: 20px; width: 300px; display: inline-block;">
       </div>
       <div class="btn text-center" id="registerButton" style="margin-top: 20px;">
         <a href="#" class="btn btn-date" style="width: 300px; display: inline-block;">내 계정에 해당 제품 등록하기</a>
@@ -163,6 +164,47 @@
         }
       } else {
         fieldsContainer.style.display = 'none';
+      }
+    }
+
+    function autoSelectOptions() {
+      const makeupField = document.getElementById('makeupField');
+      const quantityField = document.getElementById('quantityField');
+      if (makeupField.value === "기초 화장품" || makeupField.value === "클렌저") {
+        quantityField.value = "12Month";
+      } else if (makeupField.value === "선크림") {
+        quantityField.value = "6Month";
+      }
+      calculateExpiryDate(); // Update expiry date automatically
+    }
+
+    function calculateExpiryDate() {
+      const openDateField = document.getElementById('openDateField').value;
+      const quantityField = document.getElementById('quantityField').value;
+      const expiryDateField = document.getElementById('expiryDateField').value;
+      const calculatedExpiryField = document.getElementById('calculatedExpiryField');
+
+      if (openDateField && quantityField) {
+        const openDate = new Date(openDateField);
+        let monthsToAdd = 0;
+        let yearsToAdd = 0;
+
+        if (quantityField.includes('Month')) {
+          monthsToAdd = parseInt(quantityField.replace('Month', ''), 10);
+        } else if (quantityField.includes('Year')) {
+          yearsToAdd = parseInt(quantityField.replace('Year', ''), 10);
+        }
+
+        openDate.setMonth(openDate.getMonth() + monthsToAdd);
+        openDate.setFullYear(openDate.getFullYear() + yearsToAdd);
+
+        const calculatedDate = openDate.toISOString().split('T')[0];
+
+        if (expiryDateField && new Date(calculatedDate) > new Date(expiryDateField)) {
+          calculatedExpiryField.value = expiryDateField;
+        } else {
+          calculatedExpiryField.value = calculatedDate;
+        }
       }
     }
   </script>
