@@ -265,8 +265,10 @@ button,
 [type="button"],
 [type="reset"],
 [type="submit"] {
-  -webkit-appearance: button;
+  appearance: button;
+  -webkit-appearance: button; /* Webkit 브라우저용 */
 }
+
 
 button:not(:disabled),
 [type="button"]:not(:disabled),
@@ -324,8 +326,10 @@ progress {
 
 [type="search"] {
   outline-offset: -2px;
-  -webkit-appearance: none;
+  appearance: none;
+  -webkit-appearance: none; /* Webkit 브라우저용 */
 }
+
 
 [type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
