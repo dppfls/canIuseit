@@ -4,27 +4,20 @@ const Category = require('./Category');
 
 // Product 모델 정의
 const Product = sequelize.define('Product', {
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false, // 제품 이름은 필수 입력 항목
-    },
-    manufactureDate: {
-        type: DataTypes.DATE,
-        allowNull: false, // 제조일자는 필수 입력 항목
-    },
-    shelfLifeDays: {
+    id: {
         type: DataTypes.INTEGER,
-        allowNull: true, // 보관 기한은 선택 입력 항목
+        autoIncrement: true,
+        primaryKey: true, // 기본 키 설정
     },
-    expirationDate: {
+    alias: {
+        type: DataTypes.STRING,
+        allowNull: true, // 별칭은 선택 입력 항목
+    },
+    expiry_date: {
         type: DataTypes.DATE,
         allowNull: true, // 소비기한은 선택 입력 항목
     },
-    openedDate: {
-        type: DataTypes.DATE,
-        allowNull: false, // 개봉일자는 필수 입력 항목
-    },
-    categoryId: {
+    category_id: {
         type: DataTypes.INTEGER,
         references: {
             model: Category, // Category 모델을 참조
@@ -32,12 +25,16 @@ const Product = sequelize.define('Product', {
         },
         allowNull: false, // 카테고리 ID는 필수 입력 항목
     },
+    created_at: {
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), // 생성 시 자동으로 현재 시간 설정
+    },
 }, {
     tableName: 'products', // 테이블 이름 명시적 지정
-    timestamps: false, // 타임스탬프 비활성화
+    timestamps: false, // 타임스탬프 비활성화 (created_at을 명시적으로 사용하므로)
 });
 
 // Category와 Product 간의 관계 설정
-Product.belongsTo(Category, { foreignKey: 'categoryId' });
+Product.belongsTo(Category, { foreignKey: 'category_id' });
 
 module.exports = Product;

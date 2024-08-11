@@ -32,6 +32,9 @@ app.use(session({
     })
 }));
 
+// 정적 파일을 제공
+app.use(express.static(path.join(__dirname, '..', 'frontend', 'resources')));
+
 // 미들웨어 및 기타 설정
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

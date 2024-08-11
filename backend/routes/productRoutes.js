@@ -1,22 +1,34 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../config/database'); // 데이터베이스 연결 설정 파일 불러오기
+const sequelize = require('../config/database');
+const Category = require('../models/Category'); // Category 모델 불러오기
+const Product = require('../models/Product');   // Product 모델 불러오기
 
-router.post('/register-product', (req, res) => {
-    console.log('POST /api/products/register-product request received'); // 요청 수신 로그
+router.post('/register-product', async (req, res) => {
+    try {
+        console.log('POST /api/products/register-product request received');
+        
+        const { alias, expiry_date, category_id } = req.body;
 
-    const { user_id, alias, expiry_date, category_id } = req.body;
-
-    const query = `INSERT INTO products (user_id, alias, expiry_date, category_id) VALUES (?, ?, ?, ?)`;
-    db.query(query, [user_id, alias, expiry_date, category_id], (err, result) => {
-        if (err) {
-            console.error('Database error:', err); // 오류 메시지 출력
-            return res.status(500).send('Database error');
+        // 카테고리 ID가 유효한지 확인
+        const category = await Category.findByPk(category_id);
+        if (!category) {
+            return res.status(400).json({ success: false, message: 'Invalid category ID' });
         }
 
-        console.log('Product information successfully saved.'); // 쿼리 성공 로그
-        res.status(200).json({ success: true });
-    });
+        // 새로운 제품을 products 테이블에 추가
+        const newProduct = await Product.create({
+            alias: alias,
+            expiry_date: expiry_date,
+            category_id: category.id // 외래 키로 category ID 사용
+        });
+
+        console.log('Product information successfully saved.');
+        res.status(200).json({ success: true, product: newProduct });
+    } catch (err) {
+        console.error('Database error:', err);
+        res.status(500).json({ success: false, message: 'Database error', error: err });
+    }
 });
 
 module.exports = router;

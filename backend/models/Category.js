@@ -3,9 +3,14 @@ const sequelize = require('../config/database');
 
 // Category 모델 정의
 const Category = sequelize.define('Category', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true, // 기본 키 설정
+    allowNull: false,
+  },
   name: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false, // 카테고리 이름은 필수 입력 항목
     unique: true, // 카테고리 이름은 고유해야 함
   },
   shelfLifeDays: {
