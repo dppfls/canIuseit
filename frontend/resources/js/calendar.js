@@ -9,7 +9,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
       customButtons:{
         myCustomButton:{
-            text:"일정 추가"
+            text:"일정 추가",
+            click : function(){
+                //부트스트랩 모달 열기
+                $("#exampleModal").modal("show");
+            }
         },
         mySaveButton:{
             text:"저장"
