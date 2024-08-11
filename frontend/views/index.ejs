@@ -54,10 +54,10 @@
     <div class="category-select-container text-center">
       <select name="type" id="categorySelect" class="form-control category-select" style="border-radius: 10px; padding-left: 20px; display: inline-block; width: 300px;">
         <option value="">카테고리 선택</option>
-        <option value="cosmetics">화장품</option>
-        <option value="medicine">의약품</option>
-        <option value="food">식품</option>
-        <option value="etc">기타</option>
+        <option value="100">화장품</option>
+        <option value="200">의약품</option>
+        <option value="300">식품</option>
+        <option value="400">기타</option>
       </select>
       <button class="btn btn-category" onclick="showFields()" style="display: inline-block; width: 300px;">카테고리 선택하기</button>
     </div>
@@ -75,9 +75,9 @@
           <input type="text" class="form-control" value="소비기간" readonly style="margin-top: 20px; width: 300px; display: inline-block;">
           <select class="form-control" id="makeupField" style="margin-top: 20px; width: 300px; display: inline-block;" onchange="autoSelectOptions()">
             <option value="">화장품 카테고리 선택</option>
-            <option value="기초 화장품">기초 화장품</option>
-            <option value="클렌저">클렌저</option>
-            <option value="선크림">선크림</option>
+            <option value="101">기초 화장품</option>
+            <option value="102">클렌저</option>
+            <option value="103">선크림</option>
           </select>
           <input list="quantityOptions" id="quantityField" class="form-control" style="margin-top: 20px; width: 300px; display: inline-block;" onchange="calculateExpiryDate()">
           <datalist id="quantityOptions">
@@ -152,16 +152,16 @@
 
       if (categorySelect.value) {
         fieldsContainer.style.display = 'block';
-        if (categorySelect.value === 'cosmetics') {
+        if (categorySelect.value === '100') {
           generalFields.style.display = 'block';
           expiryField.style.display = 'block';
           makeupField.style.display = 'block';
-        } else if (categorySelect.value === 'etc') {
+        } else if (categorySelect.value === '400') {
           generalFields.style.display = 'block';
           expiryField.style.display = 'block';
           makeupField.style.display = 'none';
         } 
-        else if (categorySelect.value === 'medicine' || categorySelect.value === 'food') {
+        else if (categorySelect.value === '200' || categorySelect.value === '300') {
           generalFields.style.display = 'none';
           expiryField.style.display = 'block';
         } else {
@@ -176,9 +176,10 @@
     function autoSelectOptions() {
       const makeupField = document.getElementById('makeupField');
       const quantityField = document.getElementById('quantityField');
-      if (makeupField.value === "기초 화장품" || makeupField.value === "클렌저") {
+      
+      if (makeupField.value === "101" || makeupField.value === "102") {
         quantityField.value = "12Month";
-      } else if (makeupField.value === "선크림") {
+      } else if (makeupField.value === "103") {
         quantityField.value = "6Month";
       }
       calculateExpiryDate(); // Update expiry date automatically
@@ -214,31 +215,41 @@
       }
     }
 
-    
-    // 서버로부터 전달된 user 변수를 JavaScript에서 사용 가능하도록 설정
-    ///////*******다시 봐야 됨*****var user = <%= user ? JSON.stringify(user) : 'null' %>;
-
-    // '제품 등록하기'버튼을 누르면 데이터베이스에 저장됨
+    // '제품 등록하기'버튼을 누르면 데이터베이스에 저장됨   
     document.getElementById('registerButton').addEventListener('click', () => {
       const alias = document.getElementById('aliasTextField').value;
       const expiry_date = document.getElementById('calculatedExpiryField').value;
-      const category_id = document.getElementById('categorySelect').value; // category_id를 전송
-  
+      let category_id = document.getElementById('categorySelect').value;
+    
+      if (category_id === '100') {
+        const makeupField = document.getElementById('makeupField').value;
+        if (makeupField) {
+          category_id = makeupField; // 서브 카테고리가 선택되면 category_id를 해당 값으로 설정
+        }
+      }
+
+      console.log('Alias:', alias);
+      console.log('Expiry Date:', expiry_date);
+      console.log('Category ID:', category_id);
+    
       // POST 요청으로 서버에 데이터 전송
-      console.log('Sending POST request');  // 이 줄이 먼저 콘솔에 찍히는지 확인
-      fetch('/api/products/register-product', { // '/api/products/register-product' 경로로 변경
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              user_id: user.id,  // 로그인된 사용자 ID
-              alias: alias,
-              expiry_date: expiry_date,
-              category_id: category_id
-          }),
+      fetch('/api/products/register-product', { 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            alias: alias,
+            expiry_date: expiry_date,
+            category_id: category_id
+        }),
       })
-      .then(response => response.json())
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
       .then(data => {
           if (data.success) {
               alert('Product registered successfully!');
@@ -248,9 +259,10 @@
       })
       .catch(error => {
           console.error('Error:', error);
+          alert('An error occurred while registering the product. Please try again later.');
       });
-      
-  });
+    });
+  
   
   </script>
 </body>
