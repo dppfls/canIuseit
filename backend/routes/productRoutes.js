@@ -7,12 +7,21 @@ const Product = require('../models/Product');   // Product 모델 불러오기
 router.post('/register-product', async (req, res) => {
     try {
         console.log('POST /api/products/register-product request received');
+        console.log('Request body:', req.body);
+    // 로그가 안 출력되는 부분을 확인하기 위한 로그
+    console.log('Starting category_id parsing process');
+        const { alias, expiry_date } = req.body;
         
-        const { alias, expiry_date, category_id } = req.body;
-
+        console.log('category_id before parsing:', req.body.category_id);
+        // category_id를 숫자로 변환
+        const category_id = parseInt(req.body.category_id, 10); 
+        console.log('Parsed category_id:', category_id);
         // 카테고리 ID가 유효한지 확인
         const category = await Category.findByPk(category_id);
+        console.log('Category found:', category);
+
         if (!category) {
+            console.log('Invalid category ID:', category_id);
             return res.status(400).json({ success: false, message: 'Invalid category ID' });
         }
 
