@@ -6091,10 +6091,10 @@ a.close.disabled {
 }
 
 .modal-body {
-  position: relative;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
+  flex: 1 1 auto; /* 본문이 남은 공간을 채우도록 설정 */
   padding: 1rem;
+  max-height: 100%; /* 본문 높이를 모달 콘텐츠 높이에 맞게 설정 */
+  overflow-y: auto; /* 내용이 넘칠 경우 스크롤 가능 */
 }
 
 .modal-footer {
