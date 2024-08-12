@@ -96,9 +96,14 @@ app.get('/protected', ensureAuthenticated, (req, res) => {
 const PORT = process.env.PORT || 3000;
 const startServer = async () => {
     try {
+        // 데이터베이스 연결 확인
         await sequelize.authenticate();
         console.log('Connection has been established successfully.');
+
+        // 데이터베이스 초기화
         await initDb();
+        
+        // 서버 시작
         app.listen(PORT, '0.0.0.0', () => {
             console.log(`Server is running on port ${PORT}`);
         });

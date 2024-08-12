@@ -24,7 +24,7 @@
             <a class="nav-link" href="/">제품 소비기한 조회</a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="#">내 제품 소비기한 한눈에 보기</a>
+            <a class="nav-link" href="/look">내 제품 소비기한 한눈에 보기</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/label">라벨지 출력하기</a>
@@ -62,7 +62,7 @@
             </div>
             <div id="basket-list">
               <p class="font-weight-bolder d-block h4 mb-0"><%= product.alias %></p>
-              <p class="d-block h5">소비기한: <%= product.expiry_date ? product.expiry_date : 'N/A' %></p>
+              <p class="d-block h5">소비기한: <%= product.expiry_date ? product.expiry_date.toISOString().split('T')[0] : 'N/A' %></p>
             </div>
           </div>
           <a href="/label" class="btn btn-look btn-block mb-0">소비기한 라벨지 출력하기</a>
@@ -75,53 +75,6 @@
       </div>
     <% } %>
   </div>
-  
-  
-
-    <!-- 여기까지 한줄 (3개) -->
-
-    <div id="basket" class="col-4 float-left mt-5 mb-5">
-      <div class="col-12">
-        <div id="area">
-          <!-- 해당 자리에 제품 데이터베이스에 맞는 이미지가 들어가야함 -->
-        </div>
-        <div id="basket-list">
-          <!-- 해당 p 텍스트에 데이터베이스에 맞는 사용자가 등록한 이름, 제조일자, 계산된 소비기한이 들어가야함 -->
-          <p class="font-weight-bolder d-block h4 mb-0">맛있는 서양배</p>
-          <p class="d-block h5">소비기한: 2000-00-00</p>
-        </div>
-      </div>
-      <a href="/label" class="btn btn-look btn-block mb-0">소비기한 라벨지 출력하기<a>
-      <a href="/calendar" class="btn btn-look2 btn-block mb-3">해당 제품 캘린더에 등록하기<a>
-    </div>
-    <div id="basket" class="col-4 float-left mt-5 mb-5">
-      <div class="col-12">
-        <div id="area">
-          <!-- 해당 자리에 제품 데이터베이스에 맞는 이미지가 들어가야함 -->
-        </div>
-        <div id="basket-list">
-          <!-- 해당 p 텍스트에 데이터베이스에 맞는 사용자가 등록한 이름, 제조일자, 계산된 소비기한이 들어가야함 -->
-          <p class="font-weight-bolder d-block h4 mb-0">맛있는 서양배</p>
-          <p class="d-block h5">소비기한: 2000-00-00</p>
-        </div>
-      </div>
-      <a href="/label" class="btn btn-look btn-block mb-0">소비기한 라벨지 출력하기<a>
-      <a href="/calendar" class="btn btn-look2 btn-block mb-3">해당 제품 캘린더에 등록하기<a>
-    </div>
-    <div id="basket" class="col-4 float-left mt-5 mb-5">
-      <div class="col-12">
-        <div id="area">
-          <!-- 해당 자리에 제품 데이터베이스에 맞는 이미지가 들어가야함 -->
-        </div>
-        <div id="basket-list">
-          <!-- 해당 p 텍스트에 데이터베이스에 맞는 사용자가 등록한 이름, 제조일자, 계산된 소비기한이 들어가야함 -->
-          <p class="font-weight-bolder d-block h4 mb-0">맛있는 서양배</p>
-          <p class="d-block h5">소비기한: 2000-00-00</p>
-        </div>
-      </div>
-      <a href="/label" class="btn btn-look btn-block mb-0">소비기한 라벨지 출력하기<a>
-      <a href="/calendar" class="btn btn-look2 btn-block mb-3">해당 제품 캘린더에 등록하기<a>
-    </div>
   
   <footer id="footer">
     <div class="container-xl">
