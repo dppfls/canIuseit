@@ -46,69 +46,91 @@
       <p class="h1 mt-0 mb-3 text-white font-weight-bolder text-center d-block">소비기한이 있다는 사실을 알고 계신가요?</p>
       <p class="h2 mb-5 text-white font-weight-bolder text-center d-block">걱정마세요, '써도 되나?'가 계산해줄게요!</p>
     </div>
-      <!-- 별칭 상자와 텍스트 상자 추가 -->
-    <div class="alias-container text-center mt-3">
-      <input type="text" class="form-control" value="별칭" readonly style="margin-top: 20px; width: 300px; display: inline-block;">
-      <input type="text" class="form-control" id="aliasTextField" placeholder="별칭을 입력하세요" style="margin-top: 20px; width: 300px; display: inline-block;">
-    </div>
-    <div class="category-select-container text-center">
-      <select name="type" id="categorySelect" class="form-control category-select" style="border-radius: 10px; padding-left: 20px; display: inline-block; width: 300px;">
-        <option value="">카테고리 선택</option>
-        <option value="100">화장품</option>
-        <option value="200">의약품</option>
-        <option value="300">식품</option>
-        <option value="400">기타</option>
-      </select>
-      <button class="btn btn-category" onclick="showFields()" style="display: inline-block; width: 300px;">카테고리 선택하기</button>
-    </div>
-    <div class="fields-container text-center mb-5" id="fieldsContainer" style="display: none;">
-      <div class="field" id="generalFields" style="display: none;">
-        <div>
-          <input type="text" class="form-control" value="유통기한" readonly style="margin-top: 20px; width: 300px; display: inline-block;">
-          <input type="date" class="form-control" id="expiryDateField" style="margin-top: 20px; width: 300px; display: inline-block;" onchange="calculateExpiryDate()">
-        </div>
-        <div>
-          <input type="text" class="form-control" value="개봉일자" readonly style="margin-top: 20px; width: 300px; display: inline-block;">
-          <input type="date" class="form-control" id="openDateField" style="margin-top: 20px; width: 300px; display: inline-block;" onchange="calculateExpiryDate()">
-        </div>
-        <div>
-          <input type="text" class="form-control" value="소비기간" readonly style="margin-top: 20px; width: 300px; display: inline-block;">
-          <select class="form-control" id="makeupField" style="margin-top: 20px; width: 300px; display: inline-block;" onchange="autoSelectOptions()">
-            <option value="">화장품 카테고리 선택</option>
-            <option value="101">기초 화장품</option>
-            <option value="102">클렌저</option>
-            <option value="103">선크림</option>
-          </select>
-          <input list="quantityOptions" id="quantityField" class="form-control" style="margin-top: 20px; width: 300px; display: inline-block;" onchange="calculateExpiryDate()">
-          <datalist id="quantityOptions">
-            <option value="1Month">
-            <option value="2Month">
-            <option value="3Month">
-            <option value="4Month">
-            <option value="5Month">
-            <option value="6Month">
-            <option value="7Month">
-            <option value="8Month">
-            <option value="9Month">
-            <option value="10Month">
-            <option value="11Month">
-            <option value="1Year">
-            <option value="18Month">
-            <option value="2Year">
-            <option value="3Year">
-          </datalist>
-        </div>
-        <h3 style="font-size: 30px; color: white; margin-top: 20px; width: 300px; display: inline-block;">▶</h3>
-      </div>
-      <div class="field" id="expiryField">
-        <input type="text" class="form-control" value="소비기한" readonly style="margin-top: 20px; width: 300px; display: inline-block;">
-        <input type="date" class="form-control" id="calculatedExpiryField" style="margin-top: 20px; width: 300px; display: inline-block;">
-      </div>
-      <div class="btn text-center" id="registerButton" style="margin-top: 20px;">
-        <a href="#" class="btn btn-date" style="width: 300px; display: inline-block;">내 계정에 해당 제품 등록하기</a>
-      </div>
+    <!-- 버튼을 별도의 div로 이동하여 이미지 위에 정확히 위치시키기 -->
+    <div class="calculate-button">
+      <button class="btn btn-primary" data-toggle="modal" data-target="#inputModal">소비기한 계산하기</button>
     </div>
     <img src="/images/home_bg.jpg" class="d-block w-100" alt="메인 비주얼 이미지 1" title="메인 비주얼 이미지 1">
+  </div>
+
+  <!-- 모달 창 HTML -->
+  <div class="modal fade expiry-modal" id="inputModal" tabindex="-1" aria-labelledby="inputModalLabel" aria-hidden="true">
+    <div class="modal-dialog custom-modal-size">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="inputModalLabel">제품 정보 입력</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- 기존 입력 필드를 모달 내로 이동 -->
+          <div class="alias-container text-center mt-3">
+            <input type="text" class="form-control" value="별칭" readonly style="margin-top: 20px; width: 100%; display: inline-block;">
+            <input type="text" class="form-control" id="aliasTextField" placeholder="별칭을 입력하세요" style="margin-top: 20px; width: 100%; display: inline-block;">
+          </div>
+          <div class="category-select-container text-center">
+            <select name="type" id="categorySelect" class="form-control category-select" style="border-radius: 10px; padding-left: 20px; display: inline-block; width: 100%;">
+              <option value="">카테고리 선택</option>
+              <option value="100">화장품</option>
+              <option value="200">의약품</option>
+              <option value="300">식품</option>
+              <option value="400">기타</option>
+            </select>
+            <button class="btn btn-category" onclick="showFields()" style="display: inline-block; width: 100%; margin-top: 10px;">카테고리 선택하기</button>
+          </div>
+          <div class="fields-container text-center mt-4" id="fieldsContainer" style="display: none;">
+            <!-- 기존 필드들: 유통기한, 개봉일자, 소비기간 선택 등 -->
+            <div class="field" id="generalFields" style="display: none;">
+              <div>
+                <input type="text" class="form-control" value="유통기한" readonly style="margin-top: 20px; width: 100%; display: inline-block;">
+                <input type="date" class="form-control" id="expiryDateField" style="margin-top: 20px; width: 100%; display: inline-block;" onchange="calculateExpiryDate()">
+              </div>
+              <div>
+                <input type="text" class="form-control" value="개봉일자" readonly style="margin-top: 20px; width: 100%; display: inline-block;">
+                <input type="date" class="form-control" id="openDateField" style="margin-top: 20px; width: 100%; display: inline-block;" onchange="calculateExpiryDate()">
+              </div>
+              <div>
+                <input type="text" class="form-control" value="소비기간" readonly style="margin-top: 20px; width: 100%; display: inline-block;">
+                <select class="form-control" id="makeupField" style="margin-top: 20px; width: 100%; display: inline-block;" onchange="autoSelectOptions()">
+                  <option value="">화장품 카테고리 선택</option>
+                  <option value="101">기초 화장품</option>
+                  <option value="102">클렌저</option>
+                  <option value="103">선크림</option>
+                </select>
+                <input list="quantityOptions" id="quantityField" class="form-control" style="margin-top: 20px; width: 100%; display: inline-block;" onchange="calculateExpiryDate()">
+                <datalist id="quantityOptions">
+                  <option value="1Month">
+                  <option value="2Month">
+                  <option value="3Month">
+                  <option value="4Month">
+                  <option value="5Month">
+                  <option value="6Month">
+                  <option value="7Month">
+                  <option value="8Month">
+                  <option value="9Month">
+                  <option value="10Month">
+                  <option value="11Month">
+                  <option value="1Year">
+                  <option value="18Month">
+                  <option value="2Year">
+                  <option value="3Year">
+                </datalist>
+              </div>
+              <h3 style="font-size: 30px; color: white; margin-top: 20px; width: 100%; display: inline-block;">▶</h3>
+            </div>
+            <div class="field" id="expiryField">
+              <input type="text" class="form-control" value="소비기한" readonly style="margin-top: 20px; width: 100%; display: inline-block;">
+              <input type="date" class="form-control" id="calculatedExpiryField" style="margin-top: 20px; width: 100%; display: inline-block;">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+          <button type="button" class="btn btn-primary" id="registerButton">저장하기</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <footer id="footer">
@@ -120,9 +142,11 @@
     </div>
   </footer>
   
-  <script src="/js/main.js"></script>
-  <script>
+  <!-- jQuery와 Bootstrap JS 추가 -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 
+  <script>
     document.addEventListener('DOMContentLoaded', (event) => {
       const logoutButton = document.getElementById('logoutButton');
       if (logoutButton) {
@@ -262,8 +286,6 @@
           alert('An error occurred while registering the product. Please try again later.');
       });
     });
-  
-  
   </script>
 </body>
 </html>

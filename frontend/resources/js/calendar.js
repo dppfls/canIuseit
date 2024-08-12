@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
             text:"일정 추가",
             click : function(){
                 //부트스트랩 모달 열기
-                $("#exampleModal").modal("show");
+                $("#calendarModal").modal("show"); // 여기에 맞는 ID로 수정
             }
         },
         mySaveButton:{
@@ -142,5 +142,4 @@ document.addEventListener('DOMContentLoaded', function() {
   
     // 캘린더 랜더링
     calendar.render();
-  });
-  
+});
