@@ -31,7 +31,7 @@ router.post('/register-product', async (req, res) => {
             expiry_date: expiry_date,
             category_id: category.id // 외래 키로 category ID 사용
         });
-
+        console.log('New product saved:', newProduct);
         console.log('Product information successfully saved.');
         res.status(200).json({ success: true, product: newProduct });
     } catch (err) {
