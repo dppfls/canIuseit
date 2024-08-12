@@ -8,8 +8,8 @@ const path = require('path');
 const cors = require('cors');
 const flash = require('connect-flash');
 const authRoutes = require('./routes/auth');
-const expirationRoutes = require('./routes/expiration');
 const productRoutes = require('./routes/productRoutes'); // productRoutes 추가
+const lookRoutes = require('./routes/lookRoutes'); // lookRoutes 추가
 const sequelize = require('./config/database');
 const { initDb } = require('./models/initDb');
 const { ensureAuthenticated } = require('./middleware/authMid');
@@ -32,7 +32,6 @@ app.use(session({
     })
 }));
 
-// 정적 파일을 제공
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'resources')));
 
 // 미들웨어 및 기타 설정
@@ -57,8 +56,8 @@ app.use((req, res, next) => {
 
 // 라우트 설정
 app.use('/auth', authRoutes);
-app.use('/api', expirationRoutes);
 app.use('/api/products', productRoutes); // productRoutes 라우트 추가
+app.use('/look', lookRoutes); // 추가
 
 // 정적 파일 제공 설정
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'resources')));

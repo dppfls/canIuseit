@@ -7,6 +7,7 @@ const Category = sequelize.define('Category', {
     type: DataTypes.INTEGER,
     primaryKey: true, // 기본 키 설정
     allowNull: false,
+    autoIncrement: true, // AUTO_INCREMENT 설정
   },
   name: {
     type: DataTypes.STRING,
@@ -15,7 +16,7 @@ const Category = sequelize.define('Category', {
   },
   shelfLifeDays: {
     type: DataTypes.INTEGER,
-    allowNull: false, // 보관 기한은 필수 입력 항목
+    allowNull: true
   },
 }, {
   tableName: 'categories', // 테이블 이름 명시적 지정
