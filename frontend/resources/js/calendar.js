@@ -88,59 +88,27 @@ document.addEventListener('DOMContentLoaded', function() {
           start: '2021-07-16T16:00:00'
         },
         {
-          title: 'Conference',
-          start: '2021-07-11',
-          end: '2021-07-13'
-        },
-        {
-          title: 'Meeting',
-          start: '2021-07-12T10:30:00',
-          end: '2021-07-12T12:30:00'
-        },
-        {
-          title: 'Lunch',
-          start: '2021-07-12T12:00:00'
-        },
-        {
-          title: 'Meeting',
-          start: '2021-07-12T14:30:00'
-        },
-        {
           title: 'Click for Google',
           url: 'http://google.com/',
           start: '2021-07-28'
         }
       ]
     });
-  
-    // 사용자 프로바이더에 따라 캘린더 이벤트 소스 설정
-    if (userProvider === 'google') {
-      calendar.addEventSource({
-        googleCalendarApiKey: 'YOUR_GOOGLE_CALENDAR_API_KEY',
-        googleCalendarId: 'primary',
-        className: 'gcal-event'
-      });
-    } else if (userProvider === 'naver') {
-      $.ajax({
-        url: '/path/to/your/naver/api',
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer YOUR_NAVER_ACCESS_TOKEN'
-        },
-        success: function(data) {
-          var events = [];
-          data.items.forEach(function(item) {
-            events.push({
-              title: item.title,
-              start: item.start,
-              end: item.end
-            });
-          });
-          calendar.addEventSource(events);
-        }
-      });
-    }
+
+    // 페이지 로드 시 이벤트 가져오기
+    fetchNaverEvents();
   
     // 캘린더 렌더링
     calendar.render();
 });
+
+// 네이버 이벤트를 가져오는 함수
+async function fetchNaverEvents() {
+  try {
+    const response = await axios.get('/calendar/naver/events');  // 서버에 요청 보내기
+    const events = response.data;
+    calendar.addEventSource(events);  // 캘린더에 이벤트 추가
+  } catch (error) {
+    console.error('Error fetching events:', error);
+  }
+}

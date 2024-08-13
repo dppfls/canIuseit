@@ -1,9 +1,9 @@
 exports.calendar = async (req, res) => {
     await req.body.forEach((res) => {
         calendar.create({
-            title: res.title,
+            alias: res.alias,
             start: res.start,
-            end: res.end,
+            userId: res.userId,
             backgroundColor: res.backgroundColor,
         });
     });

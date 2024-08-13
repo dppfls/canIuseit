@@ -59,7 +59,7 @@ app.use((req, res, next) => {
 app.use('/auth', authRoutes);
 app.use('/api/products', productRoutes); // productRoutes 라우트 추가
 app.use('/look', lookRoutes); // lookRoutes 라우트 추가
-app.use('/', calendarRoutes); // calendarRoutes 라우트 추가
+app.use('/calendar', calendarRoutes);  // '/calendar' 경로로 라우트 연결
 
 // 정적 파일 제공 설정
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'resources')));
@@ -78,9 +78,12 @@ app.get('/look', (req, res) => { // ensureAuthenticated 제거
 });
 
 app.get('/calendar', (req, res) => {
-    console.log('Calendar Route User:', req.user);  // req.user 객체 출력 로그 추가
+    if (!req.user) {  // 사용자가 로그인하지 않았다면
+        return res.redirect('/login');
+    }
     res.render('calendar', { user: req.user });
 });
+
 
 app.get('/login', (req, res) => {
     res.render('login', { user: req.user });
