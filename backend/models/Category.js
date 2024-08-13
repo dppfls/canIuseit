@@ -3,7 +3,7 @@ const sequelize = require('../config/database');
 
 // Category 모델 정의
 const Category = sequelize.define('Category', {
-  id: {
+  categoryId: {
     type: DataTypes.INTEGER,
     primaryKey: true, // 기본 키 설정
     allowNull: false,
