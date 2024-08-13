@@ -1,10 +1,14 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-class User extends Model {
-}
+class User extends Model {}
 
 User.init({
+  userId: {
+    type: DataTypes.INTEGER, // Sequelize.INTEGER 대신 DataTypes.INTEGER를 사용
+    primaryKey: true,
+    autoIncrement: true
+  },
   googleId: {
     type: DataTypes.STRING,
     unique: true,
@@ -15,11 +19,13 @@ User.init({
   },
   provider: {
     type: DataTypes.STRING,
-    },  // provider 필드 추가
+  },
   username: {
     type: DataTypes.STRING,
   }
-  
-}, { sequelize, modelName: 'user' });
+}, {
+  sequelize,
+  modelName: 'user'
+});
 
 module.exports = User;
