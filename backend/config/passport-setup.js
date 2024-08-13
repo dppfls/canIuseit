@@ -47,19 +47,23 @@ passport.use(new GoogleStrategy({
 passport.use(new NaverStrategy({
   clientID: process.env.NAVER_CLIENT_ID,
   clientSecret: process.env.NAVER_CLIENT_SECRET,
-  callbackURL: process.env.NAVER_CALLBACK_URL || '/auth/naver/callback'
+  callbackURL: process.env.NAVER_CALLBACK_URL || '/auth/naver/callback',
+  state: true // state 값을 자동으로 생성하고 관리
+
 }, async (accessToken, refreshToken, profile, done) => {
   try {
     let [user, created] = await User.findOrCreate({
-      where: { naverId: profile.id },  // 수정된 부분
+      where: { naverId: profile.id },
       defaults: {
-        naverId: profile.id,  // 수정된 부분
-        provider: 'naver'  // 로그인 플랫폼 정보 저장
+        naverId: profile.id,
+        provider: 'naver'
       }
     });
+    user.accessToken = accessToken;  // accessToken을 user 객체에 추가
     done(null, user);
   } catch (err) {
     console.error('Error in NaverStrategy:', err);
     done(err, null);
   }
 }));
+
