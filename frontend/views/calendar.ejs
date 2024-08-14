@@ -142,20 +142,30 @@
   <script>
     $("#saveChanges").on("click", function () {
       var eventData = {
-        alias: $("#alias").val(),  // 여전히 'alias' ID를 사용
+        alias: $("#alias").val(),
         start: $("#start").val(),
-        backgroundColor: $("#color").val(), // color는 backgroundColor에 저장
+        backgroundColor: $("#color").val(),
       };
 
-      //빈값입력시 오류
+      // 빈값 입력 시 오류 처리
       if (
-        eventData.alias == "" || // alias 값이 비어있는지 확인
+        eventData.alias == "" ||
         eventData.start == ""
       ) {
         alert("입력하지 않은 값이 있습니다.");
       } else {
         // 이벤트 추가
         calendar.addEvent(eventData);
+
+        // 백엔드로 이벤트 데이터 전송
+        axios.post('/calendar', eventData)
+          .then(function (response) {
+            console.log('Event saved:', response);
+          })
+          .catch(function (error) {
+            console.error('Error saving event:', error);
+          });
+
         $("#calendarModal").modal("hide");  // 모달 창 닫기
         $("#alias").val("");  // alias 입력 필드 초기화
         $("#start").val("");  // 시작 시간 필드 초기화

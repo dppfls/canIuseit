@@ -3,8 +3,12 @@ const router = express.Router();
 const axios = require('axios');
 const calendarController = require('../controllers/calendarController');
 
-// 기존의 POST 라우트
-//router.post('/calendar', calendarController.calendar);
+// POST 라우트: 클라이언트에서 전달된 캘린더 이벤트를 저장
+router.post('/calendar', calendarController.calendar);
+
+// 캘린더 이벤트 조회
+router.get('/calendar/events', calendarController.getCalendarEvents);
+
 
 // 네이버 캘린더 API에서 이벤트를 가져오는 GET 라우트
 router.get('/naver/events', async (req, res) => {
