@@ -32,7 +32,7 @@ router.post('/register-product', async (req, res) => {
         const newProduct = await Product.create({
             alias: alias,
             expiry_date: expiry_date,
-            category_id: category.categoryId // 외래 키로 categoryId 사용
+            categoryId: category.categoryId // 외래 키로 categoryId 사용
         });
 
         console.log('New product saved:', newProduct);
