@@ -41,6 +41,7 @@ exports.getCalendarEvents = async (req, res) => {
                 userId: userId // 해당 유저의 일정만 조회
             }
         });
+        console.log('Fetched events:', events); // 데이터가 제대로 조회되는지 확인
         res.status(200).json(events);
     } catch (error) {
         console.error('Error fetching calendar events:', error);
