@@ -8,9 +8,9 @@ const path = require('path');
 const cors = require('cors');
 const flash = require('connect-flash');
 const authRoutes = require('./routes/auth');
-const productRoutes = require('./routes/productRoutes'); // productRoutes 추가
-const lookRoutes = require('./routes/lookRoutes'); // lookRoutes 추가
-const calendarRoutes = require('./routes/calendarRoutes'); // calendarRoutes 추가
+const productRoutes = require('./routes/productRoutes');
+const lookRoutes = require('./routes/lookRoutes');
+const calendarRoutes = require('./routes/calendarRoutes');
 const sequelize = require('./config/database');
 const { initDb } = require('./models/initDb');
 const { ensureAuthenticated } = require('./middleware/authMid');
@@ -20,7 +20,7 @@ const app = express();
 
 // CORS 설정
 app.use(cors({
-    origin: 'http://localhost:3000', // 올바른 origin 설정
+    origin: 'http://localhost:3000',
 }));
 
 // 세션 설정
@@ -51,15 +51,15 @@ app.use(flash());
 app.use((req, res, next) => {
     res.locals.successMessages = req.flash('success');
     res.locals.errorMessages = req.flash('error');
-    res.locals.user = req.user || null; // 로그인 상태 전달
+    res.locals.user = req.user || null;
     next();
 });
 
 // 라우트 설정
 app.use('/auth', authRoutes);
-app.use('/api/products', productRoutes); // productRoutes 라우트 추가
-app.use('/look', lookRoutes); // lookRoutes 라우트 추가
-app.use('/', calendarRoutes);  // '/calendar' 경로로 라우트 연결
+app.use('/api/products', productRoutes);
+app.use('/look', lookRoutes);
+app.use('/', calendarRoutes);
 
 // 정적 파일 제공 설정
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'resources')));
@@ -69,28 +69,28 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '..', 'frontend', 'views'));
 
 // 기본 라우트 설정
-app.get('/', (req, res) => { 
+app.get('/', (req, res) => {
     res.render('index', { user: req.user });
 });
 
-app.get('/look', (req, res) => { 
+app.get('/look', (req, res) => {
     res.render('look', { user: req.user });
 });
 
 app.get('/calendar', (req, res) => {
-    if (!req.user) {  // 사용자가 로그인하지 않았다면
+    if (!req.user) {
         return res.redirect('/login');
     }
     res.render('calendar', { user: req.user });
 });
 
-
 app.get('/login', (req, res) => {
     res.render('login', { user: req.user });
 });
 
-app.get('/label', (req, res) => { 
-    res.render('label', { user: req.user });
+app.get('/label', (req, res) => {
+    const { productName, expiryDate } = req.query;
+    res.render('label', { user: req.user, productName, expiryDate });
 });
 
 // 보호된 라우트 예시 (로그인 필요)

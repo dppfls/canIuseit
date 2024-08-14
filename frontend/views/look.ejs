@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <link rel="stylesheet" href="/css/bootstrap.css">
   <link rel="stylesheet" href="/css/app.css">
 </head>
+
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-xl">
@@ -14,10 +16,11 @@
         <img src="/images/logo.png" alt="써도되나" title="써도되나">
       </a>
       <!-- 모바일 버전에서 상호작용 가능한 버튼. 마우스를 올리면 메인 메뉴 보임. -->
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-    
+
       <div class="collapse navbar-collapse m-5" id="navbarSupportedContent">
         <ul class="navbar-nav mr-5 ml-auto">
           <li class="nav-item d-inline text-right">
@@ -36,46 +39,65 @@
         <!-- 로그인 상태에 따라 로그인/로그아웃 버튼 표시 -->
         <% if (user) { %>
           <button class="btn btn-look" id="logoutButton">로그아웃</button>
-        <% } else { %>
-          <button class="btn btn-look" onClick="location.href='/login'">로그인</button>
-        <% } %>
+          <% } else { %>
+            <button class="btn btn-look" onClick="location.href='/login'">로그인</button>
+            <% } %>
       </div>
     </div>
   </nav>
 
   <div class="look-image">
     <div class="look-text">
-      <p class="h0 mb-0 mt-5 text-white font-weight-bolder text-center d-block">내 제품 소비기한 한 눈에 보기</p>
-      <p class="h4 mt-3 mb-5 text-white text-center d-block">그동한 조회했던 제품들의 소비기한을 모아봤어요.</p>
+      <p class="h0 mb-0 mt-5 text-black font-weight-bolder text-center d-block">내 제품 소비기한 한 눈에 보기</p>
+      <p class="h4 mt-3 mb-5 text-black text-center d-block">그동한 조회했던 제품들의 소비기한을 모아봤어요.</p>
     </div>
-    <img src="/images/1.jpg" class="d-block w-100 img" alt="메인 비주얼 이미지 1" title="메인 비주얼 이미지 1">
+  </div>
+
+  <!-- 카테고리 선택 드롭다운 메뉴 -->
+  <div class="container-xl text-center mt-3">
+    <select id="categoryFilter" class="form-control" style="max-width: 300px; margin: 0 auto;">
+      <option value="">카테고리 선택</option>
+      <option value="100">화장품</option>
+      <option value="200">의약품</option>
+      <option value="300">식품</option>
+      <option value="400">기타</option>
+    </select>
   </div>
 
   <div class="container-xl mt-5 look">
-    <% if (typeof products !== 'undefined' && products.length > 0) { %> <!-- 데이터가 있는 경우에만 출력 -->
-      <% products.forEach(product => { %>
-        <div id="basket" class="col-4 float-left">
-          <div class="col-12">
-            <div id="area">
-              <!-- 제품 이미지를 표시 -->
-              <!-- <img src="<%= product.imagePath %>" alt="<%= product.alias %>"> -->
-            </div>
-            <div id="basket-list">
-              <p class="font-weight-bolder d-block h4 mb-0"><%= product.alias %></p>
-              <p class="d-block h5">소비기한: <%= product.expiry_date ? product.expiry_date.toISOString().split('T')[0] : 'N/A' %></p>
+    <% if (typeof products !=='undefined' && products.length> 0) { %> <!-- 데이터가 있는 경우에만 출력 -->
+      <div id="productGrid" class="row">
+        <% products.forEach(product=> { %>
+          <div class="col-md-4 col-sm-6 col-xs-12 mb-4 product-item" data-category="<%= product.categoryId %>">
+            <div class="card h-100">
+              <div class="card-body">
+                <p class="font-weight-bolder d-block h4 mb-0">
+                  <%= product.alias %>
+                </p>
+                <p class="d-block h5">소비기한: <%= product.expiry_date ? product.expiry_date.toISOString().split('T')[0]
+                    : 'N/A' %>
+                </p>
+              </div>
+              <div class="card-footer">
+                <!-- <a href="/label" class="btn btn-look btn-block mb-0">소비기한 라벨지 출력하기</a> -->
+                <a href="/label?productId=<%= product.productId %>&productName=<%= product.alias %>&expiryDate=<%= product.expiry_date %>"
+                  class="btn btn-look2 btn-block mb-3">라벨지 출력하기</a>
+                <a href="/calendar" class="btn btn-look2 btn-block mb-3">해당 제품 캘린더에 등록하기</a>
+                <a href="#" class="btn btn-danger btn-block mb-3 delete-product-btn"
+                  data-product-id="<%= product.productId %>">삭제</a>
+              </div>
             </div>
           </div>
-          <a href="/label" class="btn btn-look btn-block mb-0">소비기한 라벨지 출력하기</a>
-          <a href="/calendar" class="btn btn-look2 btn-block mb-3">해당 제품 캘린더에 등록하기</a>
-        </div>
-      <% }) %>
-    <% } else { %>
-      <div class="alert alert-info" role="alert">
-        등록된 제품이 없습니다.
+          <% }) %>
       </div>
-    <% } %>
+      <% } else { %>
+        <div class="alert alert-info" role="alert">
+          등록된 제품이 없습니다.
+        </div>
+        <% } %>
   </div>
-  
+
+
   <footer id="footer">
     <div class="container-xl">
       <div class="line mt-5"></div>
@@ -93,17 +115,76 @@
             method: 'GET',
             credentials: 'include'
           })
-          .then(response => {
-            if (response.redirected) {
-              window.location.href = response.url;
-            }
-          })
-          .catch(error => {
-            console.error('Logout error:', error);
-          });
+            .then(response => {
+              if (response.redirected) {
+                window.location.href = response.url;
+              }
+            })
+            .catch(error => {
+              console.error('Logout error:', error);
+            });
         });
       }
     });
+
+    /* 카테고리 선택에 따라 제품을 필터링 */
+    document.getElementById('categoryFilter').addEventListener('change', function () {
+      var selectedCategory = this.value;
+      var products = document.querySelectorAll('.product-item');
+
+      products.forEach(function (product) {
+        var productCategory = product.getAttribute('data-category');
+
+        // 화장품 카테고리 선택 시 100, 101, 102, 103 카테고리 모두 표시
+        if (selectedCategory === "100") {
+          if (["100", "101", "102", "103"].includes(productCategory)) {
+            product.style.display = 'block';
+          } else {
+            product.style.display = 'none';
+          }
+        } else if (selectedCategory === "" || productCategory === selectedCategory) {
+          product.style.display = 'block';
+        } else {
+          product.style.display = 'none';
+        }
+      });
+    });
+
+    // 등록된 제품 삭제
+    document.querySelectorAll('.delete-product-btn').forEach(button => {
+      button.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        const productId = this.getAttribute('data-product-id');
+
+        if (confirm('정말 이 제품을 삭제하시겠습니까?')) {
+          fetch(`/api/products/delete-product/${productId}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                // 삭제가 성공하면 제품을 UI에서 제거
+                const productElement = this.closest('.product-item');
+                productElement.remove();
+                alert('제품이 삭제되었습니다.');
+              } else {
+                alert('제품 삭제에 실패했습니다.');
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('서버 오류가 발생했습니다. 다시 시도해주세요.');
+            });
+        }
+      });
+    });
+
+
   </script>
 </body>
-</html>  
+
+</html>

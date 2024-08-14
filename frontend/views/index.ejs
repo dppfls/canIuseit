@@ -1,291 +1,339 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>써도 되나?</title>
-  <link rel="stylesheet" href="/css/bootstrap.css">
-  <link rel="stylesheet" href="/css/app.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>써도 되나?</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/app.css">
 </head>
+
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-xl">
-      <a class="navbar-brand" href="/">
-        <img src="/images/logo.png" alt="써도되나" title="써도되나">
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse m-5" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-5 ml-auto">
-          <li class="nav-item active d-inline text-right">
-            <a class="nav-link" href="#">제품 소비기한 조회</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/look">내 제품 소비기한 한눈에 보기</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/label">라벨지 출력하기</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/calendar">캘린더 일정 확인하기</a>
-          </li>
-        </ul>
-        <% if (user) { %>
-          <button class="btn btn-look" id="logoutButton">로그아웃</button>
-        <% } else { %>
-          <button class="btn btn-look" onClick="location.href='/login'">로그인</button>
-        <% } %>
-      </div>
-    </div>
-  </nav>
-
-  <div class="image">
-    <div class="main-text">
-      <p class="h1 mb-0 text-white font-weight-bolder text-center d-block">당신이 사용하고 있는 모든 것에는</p>
-      <p class="h1 mt-0 mb-3 text-white font-weight-bolder text-center d-block">소비기한이 있다는 사실을 알고 계신가요?</p>
-      <p class="h2 mb-5 text-white font-weight-bolder text-center d-block">걱정마세요, '써도 되나?'가 계산해줄게요!</p>
-    </div>
-    <!-- 버튼을 별도의 div로 이동하여 이미지 위에 정확히 위치시키기 -->
-    <div class="calculate-button">
-      <button class="btn btn-primary" data-toggle="modal" data-target="#inputModal">소비기한 계산하기</button>
-    </div>
-    <img src="/images/home_bg.jpg" class="d-block w-100" alt="메인 비주얼 이미지 1" title="메인 비주얼 이미지 1">
-  </div>
-
-  <!-- 모달 창 HTML -->
-  <div class="modal fade expiry-modal" id="inputModal" tabindex="-1" aria-labelledby="inputModalLabel" aria-hidden="true">
-    <div class="modal-dialog custom-modal-size">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="inputModalLabel">제품 정보 입력</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <!-- 기존 입력 필드를 모달 내로 이동 -->
-          <div class="alias-container text-center mt-3">
-            <input type="text" class="form-control" value="별칭" readonly style="margin-top: 20px; width: 100%; display: inline-block;">
-            <input type="text" class="form-control" id="aliasTextField" placeholder="별칭을 입력하세요" style="margin-top: 20px; width: 100%; display: inline-block;">
-          </div>
-          <div class="category-select-container text-center">
-            <select name="type" id="categorySelect" class="form-control category-select" style="border-radius: 10px; padding-left: 20px; display: inline-block; width: 100%;">
-              <option value="">카테고리 선택</option>
-              <option value="100">화장품</option>
-              <option value="200">의약품</option>
-              <option value="300">식품</option>
-              <option value="400">기타</option>
-            </select>
-            <button class="btn btn-category" onclick="showFields()" style="display: inline-block; width: 100%; margin-top: 10px;">카테고리 선택하기</button>
-          </div>
-          <div class="fields-container text-center mt-4" id="fieldsContainer" style="display: none;">
-            <!-- 기존 필드들: 유통기한, 개봉일자, 소비기간 선택 등 -->
-            <div class="field" id="generalFields" style="display: none;">
-              <div>
-                <input type="text" class="form-control" value="유통기한" readonly style="margin-top: 20px; width: 100%; display: inline-block;">
-                <input type="date" class="form-control" id="expiryDateField" style="margin-top: 20px; width: 100%; display: inline-block;" onchange="calculateExpiryDate()">
-              </div>
-              <div>
-                <input type="text" class="form-control" value="개봉일자" readonly style="margin-top: 20px; width: 100%; display: inline-block;">
-                <input type="date" class="form-control" id="openDateField" style="margin-top: 20px; width: 100%; display: inline-block;" onchange="calculateExpiryDate()">
-              </div>
-              <div>
-                <input type="text" class="form-control" value="소비기간" readonly style="margin-top: 20px; width: 100%; display: inline-block;">
-                <select class="form-control" id="makeupField" style="margin-top: 20px; width: 100%; display: inline-block;" onchange="autoSelectOptions()">
-                  <option value="">화장품 카테고리 선택</option>
-                  <option value="101">기초 화장품</option>
-                  <option value="102">클렌저</option>
-                  <option value="103">선크림</option>
-                </select>
-                <input list="quantityOptions" id="quantityField" class="form-control" style="margin-top: 20px; width: 100%; display: inline-block;" onchange="calculateExpiryDate()">
-                <datalist id="quantityOptions">
-                  <option value="1Month">
-                  <option value="2Month">
-                  <option value="3Month">
-                  <option value="4Month">
-                  <option value="5Month">
-                  <option value="6Month">
-                  <option value="7Month">
-                  <option value="8Month">
-                  <option value="9Month">
-                  <option value="10Month">
-                  <option value="11Month">
-                  <option value="1Year">
-                  <option value="18Month">
-                  <option value="2Year">
-                  <option value="3Year">
-                </datalist>
-              </div>
-              <h3 style="font-size: 30px; color: white; margin-top: 20px; width: 100%; display: inline-block;">▶</h3>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-xl">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="써도되나" title="써도되나">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse m-5" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-5 ml-auto">
+                    <li class="nav-item active d-inline text-right">
+                        <a class="nav-link" href="#">제품 소비기한 조회</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/look">내 제품 소비기한 한눈에 보기</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/label">라벨지 출력하기</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/calendar">캘린더 일정 확인하기</a>
+                    </li>
+                </ul>
+                <% if (user) { %>
+                    <button class="btn btn-look" id="logoutButton">로그아웃</button>
+                    <% } else { %>
+                        <button class="btn btn-look" onClick="location.href='/login'">로그인</button>
+                        <% } %>
             </div>
-            <div class="field" id="expiryField">
-              <input type="text" class="form-control" value="소비기한" readonly style="margin-top: 20px; width: 100%; display: inline-block;">
-              <input type="date" class="form-control" id="calculatedExpiryField" style="margin-top: 20px; width: 100%; display: inline-block;">
+        </div>
+    </nav>
+
+    <div class="image">
+        <div class="main-text">
+            <p class="h1 mb-0 text-white font-weight-bolder text-center d-block">당신이 사용하고 있는 모든 것에는</p>
+            <p class="h1 mt-0 mb-3 text-white font-weight-bolder text-center d-block">소비기한이 있다는 사실을 알고 계신가요?</p>
+            <p class="h2 mb-5 text-white font-weight-bolder text-center d-block">걱정마세요, '써도 되나?'가 계산해줄게요!</p>
+        </div>
+        <!-- 버튼을 별도의 div로 이동하여 이미지 위에 정확히 위치시키기 -->
+        <div class="calculate-button">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#inputModal">소비기한 계산하기</button>
+        </div>
+        <img src="/images/home_bg.jpg" class="d-block w-100" alt="메인 비주얼 이미지 1" title="메인 비주얼 이미지 1">
+    </div>
+
+    <!-- 모달 창 HTML -->
+    <div class="modal fade expiry-modal" id="inputModal" tabindex="-1" aria-labelledby="inputModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog custom-modal-size">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inputModalLabel">제품 정보 입력</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- 기존 입력 필드를 모달 내로 이동 -->
+                    <div class="alias-container text-center mt-3">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <input type="text" class="form-control" value="별칭" readonly style="width: 48%;">
+                            <input type="text" class="form-control" id="aliasTextField" placeholder="별칭을 입력하세요"
+                                style="width: 48%;">
+                        </div>
+                    </div>
+
+                    <div class="category-select-container text-center mt-3">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <select name="type" id="categorySelect" class="form-control category-select"
+                                style="width: 48%; border-radius: 10px; padding-left: 20px;">
+                                <option value="">카테고리 선택</option>
+                                <option value="100">화장품</option>
+                                <option value="200">의약품</option>
+                                <option value="300">식품</option>
+                                <option value="400">기타</option>
+                            </select>
+                            <button class="btn btn-category" onclick="showFields()"
+                                style="width: 48%; margin-top: 0;">카테고리 선택하기</button>
+                        </div>
+                    </div>
+
+                    <div class="fields-container text-center mt-4" id="fieldsContainer" style="display: none;">
+                        <!-- 기존 필드들: 유통기한, 개봉일자, 소비기간 선택 등 -->
+                        <div class="field" id="generalFields" style="display: none;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <input type="text" class="form-control" value="개봉일자" readonly style="width: 48%;">
+                                <input type="date" class="form-control" id="openDateField" style="width: 48%;"
+                                    onchange="calculateExpiryDate()">
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <input type="text" class="form-control" value="소비기간" readonly
+                                    style="margin-top: 20px; width: 32%;">
+                                <select class="form-control" id="makeupField" style="margin-top: 20px; width: 32%;"
+                                    onchange="autoSelectOptions()">
+                                    <option value="">화장품 카테고리 선택</option>
+                                    <option value="101">기초 화장품</option>
+                                    <option value="102">클렌저</option>
+                                    <option value="103">선크림</option>
+                                </select>
+                                <input list="quantityOptions" id="quantityField" class="form-control"
+                                    style="margin-top: 20px; width: 32%;" onchange="calculateExpiryDate()">
+                                <datalist id="quantityOptions">
+                                    <option value="1Month">
+                                    <option value="2Month">
+                                    <option value="3Month">
+                                    <option value="4Month">
+                                    <option value="5Month">
+                                    <option value="6Month">
+                                    <option value="7Month">
+                                    <option value="8Month">
+                                    <option value="9Month">
+                                    <option value="10Month">
+                                    <option value="11Month">
+                                    <option value="1Year">
+                                    <option value="18Month">
+                                    <option value="2Year">
+                                    <option value="3Year">
+                                </datalist>
+                            </div>
+
+                            <h3
+                                style="font-size: 30px; color: black; margin-top: 20px; width: 100%; display: inline-block;">
+                                ▶</h3>
+                        </div>
+                        <div class="field" id="expiryField">
+                            <input type="text" class="form-control" value="소비기한" readonly
+                                style="margin-top: 20px; width: 100%; display: inline-block;">
+                            <input type="date" class="form-control" id="calculatedExpiryField"
+                                style="margin-top: 20px; width: 100%; display: inline-block;">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary" id="registerButton">저장하기</button>
+                </div>
             </div>
-          </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-          <button type="button" class="btn btn-primary" id="registerButton">저장하기</button>
+    </div>
+
+    <footer id="footer">
+        <div class="container-xl">
+            <div class="line mt-5"></div>
+            <img src="/images/logo.png" class="mt-5" alt="">
+            <img src="/images/sns.png" class="d-block mt-2 sns" alt="">
+            <p class="text-dark">Copyright(c) 2024 써도 되나?. All rights reserved.</p>
         </div>
-      </div>
-    </div>
-  </div>
+    </footer>
 
-  <footer id="footer">
-    <div class="container-xl">
-      <div class="line mt-5"></div>
-      <img src="/images/logo.png" class="mt-5" alt="">
-      <img src="/images/sns.png" class="d-block mt-2 sns" alt="">
-      <p class="text-dark">Copyright(c) 2024 써도 되나?. All rights reserved.</p>
-    </div>
-  </footer>
-  
-  <!-- jQuery와 Bootstrap JS 추가 -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery와 Bootstrap JS 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-      const logoutButton = document.getElementById('logoutButton');
-      if (logoutButton) {
-        logoutButton.addEventListener('click', () => {
-          fetch('/auth/logout', {
-            method: 'GET',
-            credentials: 'include'
-          })
-          .then(response => {
-            if (response.redirected) {
-              window.location.href = response.url;
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const logoutButton = document.getElementById('logoutButton');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', () => {
+                    fetch('/auth/logout', {
+                        method: 'GET',
+                        credentials: 'include'
+                    })
+                        .then(response => {
+                            if (response.redirected) {
+                                window.location.href = response.url;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Logout error:', error);
+                        });
+                });
             }
-          })
-          .catch(error => {
-            console.error('Logout error:', error);
-          });
         });
-      }
-    });
 
-    function showFields() {
-      const categorySelect = document.getElementById('categorySelect');
-      const fieldsContainer = document.getElementById('fieldsContainer');
-      const generalFields = document.getElementById('generalFields');
-      const expiryField = document.getElementById('expiryField');
-      const makeupField = document.getElementById('makeupField');
+        function showFields() {
+            const categorySelect = document.getElementById('categorySelect');
+            const fieldsContainer = document.getElementById('fieldsContainer');
+            const generalFields = document.getElementById('generalFields');
+            const expiryField = document.getElementById('expiryField');
+            const makeupField = document.getElementById('makeupField');
 
-      if (categorySelect.value) {
-        fieldsContainer.style.display = 'block';
-        if (categorySelect.value === '100') {
-          generalFields.style.display = 'block';
-          expiryField.style.display = 'block';
-          makeupField.style.display = 'block';
-        } else if (categorySelect.value === '400') {
-          generalFields.style.display = 'block';
-          expiryField.style.display = 'block';
-          makeupField.style.display = 'none';
-        } 
-        else if (categorySelect.value === '200' || categorySelect.value === '300') {
-          generalFields.style.display = 'none';
-          expiryField.style.display = 'block';
-        } else {
-          generalFields.style.display = 'none';
-          expiryField.style.display = 'none';
-        }
-      } else {
-        fieldsContainer.style.display = 'none';
-      }
-    }
-
-    function autoSelectOptions() {
-      const makeupField = document.getElementById('makeupField');
-      const quantityField = document.getElementById('quantityField');
-      
-      if (makeupField.value === "101" || makeupField.value === "102") {
-        quantityField.value = "12Month";
-      } else if (makeupField.value === "103") {
-        quantityField.value = "6Month";
-      }
-      calculateExpiryDate(); // Update expiry date automatically
-    }
-
-    function calculateExpiryDate() {
-      const openDateField = document.getElementById('openDateField').value;
-      const quantityField = document.getElementById('quantityField').value;
-      const expiryDateField = document.getElementById('expiryDateField').value;
-      const calculatedExpiryField = document.getElementById('calculatedExpiryField');
-
-      if (openDateField && quantityField) {
-        const openDate = new Date(openDateField);
-        let monthsToAdd = 0;
-        let yearsToAdd = 0;
-
-        if (quantityField.includes('Month')) {
-          monthsToAdd = parseInt(quantityField.replace('Month', ''), 10);
-        } else if (quantityField.includes('Year')) {
-          yearsToAdd = parseInt(quantityField.replace('Year', ''), 10);
+            if (categorySelect.value) {
+                fieldsContainer.style.display = 'block';
+                if (categorySelect.value === '100') {
+                    generalFields.style.display = 'block';
+                    expiryField.style.display = 'block';
+                    makeupField.style.display = 'block';
+                } else if (categorySelect.value === '400') {
+                    generalFields.style.display = 'block';
+                    expiryField.style.display = 'block';
+                    makeupField.style.display = 'none';
+                }
+                else if (categorySelect.value === '200' || categorySelect.value === '300') {
+                    generalFields.style.display = 'none';
+                    expiryField.style.display = 'block';
+                } else {
+                    generalFields.style.display = 'none';
+                    expiryField.style.display = 'none';
+                }
+            } else {
+                fieldsContainer.style.display = 'none';
+            }
         }
 
-        openDate.setMonth(openDate.getMonth() + monthsToAdd);
-        openDate.setFullYear(openDate.getFullYear() + yearsToAdd);
+        function autoSelectOptions() {
+            const makeupField = document.getElementById('makeupField');
+            const quantityField = document.getElementById('quantityField');
 
-        const calculatedDate = openDate.toISOString().split('T')[0];
-
-        if (expiryDateField && new Date(calculatedDate) > new Date(expiryDateField)) {
-          calculatedExpiryField.value = expiryDateField;
-        } else {
-          calculatedExpiryField.value = calculatedDate;
+            if (makeupField.value === "101" || makeupField.value === "102") {
+                quantityField.value = "12Month";
+            } else if (makeupField.value === "103") {
+                quantityField.value = "6Month";
+            }
+            calculateExpiryDate(); // Update expiry date automatically
         }
-      }
-    }
 
-    // '제품 등록하기'버튼을 누르면 데이터베이스에 저장됨   
-    document.getElementById('registerButton').addEventListener('click', () => {
-      const alias = document.getElementById('aliasTextField').value;
-      const expiry_date = document.getElementById('calculatedExpiryField').value;
-      let category_id = document.getElementById('categorySelect').value;
-    
-      if (category_id === '100') {
-        const makeupField = document.getElementById('makeupField').value;
-        if (makeupField) {
-          category_id = makeupField; // 서브 카테고리가 선택되면 category_id를 해당 값으로 설정
+        function calculateExpiryDate() {
+            const openDateField = document.getElementById('openDateField').value;
+            const quantityField = document.getElementById('quantityField').value;
+            const expiryDateField = document.getElementById('expiryDateField').value;
+            const calculatedExpiryField = document.getElementById('calculatedExpiryField');
+
+            if (openDateField && quantityField) {
+                const openDate = new Date(openDateField);
+                let monthsToAdd = 0;
+                let yearsToAdd = 0;
+
+                if (quantityField.includes('Month')) {
+                    monthsToAdd = parseInt(quantityField.replace('Month', ''), 10);
+                } else if (quantityField.includes('Year')) {
+                    yearsToAdd = parseInt(quantityField.replace('Year', ''), 10);
+                }
+
+                openDate.setMonth(openDate.getMonth() + monthsToAdd);
+                openDate.setFullYear(openDate.getFullYear() + yearsToAdd);
+
+                const calculatedDate = openDate.toISOString().split('T')[0];
+
+                if (expiryDateField && new Date(calculatedDate) > new Date(expiryDateField)) {
+                    calculatedExpiryField.value = expiryDateField;
+                } else {
+                    calculatedExpiryField.value = calculatedDate;
+                }
+            }
         }
-      }
 
-      console.log('Alias:', alias);
-      console.log('Expiry Date:', expiry_date);
-      console.log('Category ID:', category_id);
-    
-      // POST 요청으로 서버에 데이터 전송
-      fetch('/api/products/register-product', { 
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            alias: alias,
-            expiry_date: expiry_date,
-            category_id: category_id
-        }),
-      })
-      .then(response => {
-          if (!response.ok) {
-              throw new Error('Network response was not ok');
-          }
-          return response.json();
-      })
-      .then(data => {
-          if (data.success) {
-              alert('Product registered successfully!');
-          } else {
-              alert('Failed to register product.');
-          }
-      })
-      .catch(error => {
-          console.error('Error:', error);
-          alert('An error occurred while registering the product. Please try again later.');
-      });
-    });
-  </script>
+        // 모달 창이 완전히 닫힐 때 이벤트
+        $('#inputModal').on('hidden.bs.modal', function () {
+            // 입력 필드 초기화
+            document.getElementById('aliasTextField').value = '';
+            document.getElementById('expiryDateField').value = '';
+            document.getElementById('openDateField').value = '';
+            document.getElementById('makeupField').value = '';
+            document.getElementById('quantityField').value = '';
+            document.getElementById('calculatedExpiryField').value = '';
+
+            // 기타 초기화가 필요한 필드들
+            document.getElementById('categorySelect').value = '';
+            document.getElementById('fieldsContainer').style.display = 'none';
+            document.getElementById('generalFields').style.display = 'none';
+            document.getElementById('expiryField').style.display = 'none';
+        });
+
+        // '제품 등록하기'버튼을 누르면 데이터베이스에 저장됨   
+        document.getElementById('registerButton').addEventListener('click', () => {
+            const alias = document.getElementById('aliasTextField').value;
+            const expiry_date = document.getElementById('calculatedExpiryField').value;
+            let category_id = document.getElementById('categorySelect').value;
+
+            // 입력값 검증
+            if (!alias) {
+                alert('별칭은 필수 입력 항목입니다.');
+                return;  // 입력이 없으면 함수 종료
+            }
+
+            if (!expiry_date) {
+                alert('소비기한은 필수 입력 항목입니다.');
+                return;  // 입력이 없으면 함수 종료
+            }
+
+            if (category_id === '100') {
+                const makeupField = document.getElementById('makeupField').value;
+                if (makeupField) {
+                    category_id = makeupField; // 서브 카테고리가 선택되면 category_id를 해당 값으로 설정
+                }
+            }
+
+            console.log('Alias:', alias);
+            console.log('Expiry Date:', expiry_date);
+            console.log('Category ID:', category_id);
+
+            // POST 요청으로 서버에 데이터 전송
+            fetch('/api/products/register-product', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    alias: alias,
+                    expiry_date: expiry_date,
+                    category_id: category_id
+                }),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert('Product registered successfully!');
+                    } else {
+                        alert('Failed to register product.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while registering the product. Please try again later.');
+                });
+        });
+    </script>
 </body>
+
 </html>
