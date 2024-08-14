@@ -17,23 +17,26 @@ document.addEventListener('DOMContentLoaded', function() {
             // 부트스트랩 모달 열기
             $("#calendarModal").modal("show"); // 모달을 열 때 맞는 ID로 수정
           }
-        },
+        },// 이벤트 저장 버튼 클릭 시
+
         mySaveButton: {
           text: "저장",
           click: async function () {
             if (confirm("저장하시겠습니까?")){
-               // 지금까지 생성된 모든 이벤트 저장하기
-            var allEvent = calendar.getEvents();
-            // 이벤트 저장하기
-            const saveEvent = await axios({
-              method: "POST",
-              url: "/calendar",
-              data: allEvent,
-            });
+              var allEvent = calendar.getEvents();
+              const eventData = allEvent.map(event => ({
+                alias: event.title,
+                start: event.start.toISOString(),
+                backgroundColor: event.backgroundColor
+              }));
+        
+              // 이벤트 저장하기
+              const saveEvent = await axios.post('/calendar', eventData);
+              console.log('Event saved:', saveEvent);
+            }
           }
         }
-      }
-    },
+      },
 
       // 헤더에 표시할 툴바
       headerToolbar: {
@@ -48,6 +51,9 @@ document.addEventListener('DOMContentLoaded', function() {
       nowIndicator: true, // 현재 시간을 표시
       dayMaxEvents: true, // 하루에 표시할 최대 이벤트 수
       locale: 'ko', // 한국어 로케일 설정
+
+
+
       eventAdd: function(obj) { 
         console.log(obj);
       },
@@ -68,33 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
           });
         }
         calendar.unselect();
-      },
-      events: [
-        {
-          title: 'All Day Event',
-          start: '2021-07-01',
-        },
-        {
-          title: 'Long Event',
-          start: '2021-07-07',
-          end: '2021-07-10'
-        },
-        {
-          groupId: 999,
-          title: 'Repeating Event',
-          start: '2021-07-09T16:00:00'
-        },
-        {
-          groupId: 999,
-          title: 'Repeating Event',
-          start: '2021-07-16T16:00:00'
-        },
-        {
-          title: 'Click for Google',
-          url: 'http://google.com/',
-          start: '2021-07-28'
-        }
-      ]
+      }
     });
 
     // 페이지 로드 시 이벤트 가져오기
@@ -104,13 +84,19 @@ document.addEventListener('DOMContentLoaded', function() {
     calendar.render();
 });
 
-// 네이버 이벤트를 가져오는 함수
+// 네이버 이벤트를 가져오는 함수 -> 사용자 이벤트를 가져오는 함수로 수정
 async function fetchNaverEvents() {
   try {
-    const response = await axios.get('/calendar/naver/events');  // 서버에 요청 보내기
-    const events = response.data;
+    const response = await axios.get('/calendar/events');  // 서버에 요청 보내기
+    const events = response.data.map(event => ({
+      title: event.alias,  // alias를 title로 매핑
+      start: event.start,
+      backgroundColor: event.backgroundColor,
+    }));
+    console.log('Fetched events from server:', events); // 추가된 로그
     calendar.addEventSource(events);  // 캘린더에 이벤트 추가
   } catch (error) {
     console.error('Error fetching events:', error);
   }
 }
+
