@@ -20,33 +20,6 @@ app.get('/products', async (req, res) => {
   }
 });
 
-// 라벨 출력 API -> pdf 형식의 docu 생성되도록 
-app.post('/labels', async (req, res) => {
-  const { productId } = req.body;
-  try {
-    const product = await Product.findByPk(productId);
-    if (!product) {
-      return res.status(404).send('물건이 존재하지 않습니다');
-    }
-
-    // PDF 생성
-    const doc = new pdf();
-    doc.fontSize(12); // 프린트할 라벨지가 작을 것 같아서 폰트 사이즈도 작게...ㅎㅎ
-    doc.text(`제품명: ${product.name}`);
-    doc.text(`제조일자: ${product.manufactureDate}`);
-    doc.text(`소비기한: ${product.expirationDate}`);
-
-    // PDF 프린트 아웃
-    res.setHeader('Content-disposition', 'attachment; filename=label.pdf');
-    res.setHeader('Content-type', 'application/pdf');
-    doc.pipe(res);
-    doc.end();
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('서버 내부 오류가 발생했습니다.\n 다시 시도해주세요.');
-  }
-});
-
 // Google Calendar API 설정
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,

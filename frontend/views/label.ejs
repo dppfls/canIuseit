@@ -54,13 +54,18 @@
                     <div class="col-md-6">
                         <img src="/images/2.jpg" class="medicine w-100" alt=" "> 
                     </div>
-                    <!-- look에서 라벨지 출력을 누르면 해당 제품이 나올 수 있도록 제작해야함 -->
+                    <!-- look에서 라벨지 출력을 누르면 해당 제품이 나올 수 있도록 제작해야함 
                     <div class="col-md-6 product-details"> 
                         <p class="h2 mb-0 mt-6 text-black font-weight-bolder ml-5 text-left d-block">체리맛 감기약</p>
-                        <p class="h5 mb-0 mt-2 text-black ml-5 text-left d-block">제조기한: 2000-00-00</p>
-                        <p class="h5 mb-0 mt-2 mb-4 text-black ml-5 text-left d-block">사용기한: 2000-00-00</p>
+                        <p class="h5 mb-0 mt-2 text-black ml-5 text-left d-block">소비기한: 2000-00-00</p>
                         <button class="btn btn-look btn-block" id="print-button">눌러서 출력하기</button>
+                    </div> -->
+                    <div class="col-md-6 product-details"> 
+                      <p class="h2 mb-0 mt-6 text-black font-weight-bolder ml-5 text-left d-block"><%= productName %></p>
+                      <p class="h5 mb-0 mt-2 text-black ml-5 text-left d-block">소비기한: <%= expiryDate %></p>
+                      <button class="btn btn-look btn-block" id="print-button">눌러서 출력하기</button>
                     </div>
+                  
                 </div>
             </div>
         </section>
@@ -95,6 +100,30 @@
         });
       }
     });
+
+      // 라벨 출력 버튼 클릭 시 PDF 다운로드
+      document.getElementById('print-button').addEventListener('click', function () {
+        const productId = parseInt('<%= productId %>', 10); // URL 쿼리로 받은 제품 ID를 사용
+        fetch('/labels', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ productId }),  // 제품 ID를 POST 요청으로 보냄
+        })
+        .then(response => response.blob())
+        .then(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'label.pdf';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        })
+        .catch(error => console.error('Error:', error));
+      });
+    
   </script>
 </body>
 </html>
