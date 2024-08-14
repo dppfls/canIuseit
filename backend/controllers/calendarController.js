@@ -1,12 +1,16 @@
 const Calendar = require('../models/Calendar');
 
-
-/*캘린더 이벤트 저장 (POST 요청): /calendar 에서 처리.
-캘린더 이벤트 조회 (GET 요청): /calendar/events 에서 처리*/
+/* 캘린더 이벤트 저장 (POST 요청): /calendar 에서 처리 */
 exports.calendar = async (req, res) => {
     try {
-        const userId = req.user.id; // 세션 또는 인증된 유저 정보에서 가져옴
+        if (!req.user) {  // req.user가 undefined인지 확인
+            return res.status(401).send('Unauthorized');
+        }
+
+        const userId = req.user.userId; // userId로 수정
+        console.log('Current User ID:', userId);  // userId가 잘 전달되는지 확인
         const events = Array.isArray(req.body) ? req.body : [req.body];
+        console.log('Received events:', events); // 디버깅 로그 추가
 
         for (const event of events) {
             await Calendar.create({
@@ -23,9 +27,15 @@ exports.calendar = async (req, res) => {
     }
 };
 
+/* 캘린더 이벤트 조회 (GET 요청): /calendar/events 에서 처리 */
 exports.getCalendarEvents = async (req, res) => {
     try {
-        const userId = req.user.id; // 현재 로그인한 유저의 ID
+        if (!req.user) {  // req.user가 undefined인지 확인
+            return res.status(401).send('Unauthorized');
+        }
+
+        console.log('Fetching events for User ID:', req.user.userId);
+        const userId = req.user.userId; // userId로 수정
         const events = await Calendar.findAll({
             where: {
                 userId: userId // 해당 유저의 일정만 조회
