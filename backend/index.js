@@ -30,8 +30,10 @@ app.use(session({
     saveUninitialized: false,
     store: new SequelizeStore({
         db: sequelize,
-    })
+    }),
+    cookie: { secure: false }  // HTTPS 사용 시 true로 설정
 }));
+
 
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'resources')));
 
@@ -59,7 +61,9 @@ app.use((req, res, next) => {
 app.use('/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/look', lookRoutes);
-app.use('/', calendarRoutes);
+//app.use('/', calendarRoutes);
+app.use('/calendar', require('./routes/calendarRoutes'));
+
 
 // 정적 파일 제공 설정
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'resources')));
