@@ -88,7 +88,7 @@
                                 <option value="400">기타</option>
                             </select>
                             <button class="btn btn-category" onclick="showFields()"
-                                style="width: 48%; margin-top: 0;">카테고리 선택하기</button>
+                                style="width: 48%; margin-top: 0; background-color: #e9ecef;">카테고리 선택하기</button>
                         </div>
                     </div>
 
@@ -231,49 +231,63 @@
         function calculateExpiryDate() {
             const openDateField = document.getElementById('openDateField').value;
             const quantityField = document.getElementById('quantityField').value;
-            const expiryDateField = document.getElementById('expiryDateField').value;
-            const calculatedExpiryField = document.getElementById('calculatedExpiryField');
-
+            const expiryDateField = document.getElementById('calculatedExpiryField'); // 수정: calculatedExpiryField로 변경
+        
             if (openDateField && quantityField) {
                 const openDate = new Date(openDateField);
                 let monthsToAdd = 0;
                 let yearsToAdd = 0;
-
+        
                 if (quantityField.includes('Month')) {
                     monthsToAdd = parseInt(quantityField.replace('Month', ''), 10);
                 } else if (quantityField.includes('Year')) {
                     yearsToAdd = parseInt(quantityField.replace('Year', ''), 10);
                 }
-
+        
                 openDate.setMonth(openDate.getMonth() + monthsToAdd);
                 openDate.setFullYear(openDate.getFullYear() + yearsToAdd);
-
+        
                 const calculatedDate = openDate.toISOString().split('T')[0];
-
-                if (expiryDateField && new Date(calculatedDate) > new Date(expiryDateField)) {
-                    calculatedExpiryField.value = expiryDateField;
-                } else {
-                    calculatedExpiryField.value = calculatedDate;
-                }
+        
+                expiryDateField.value = calculatedDate; // calculatedExpiryField의 value를 설정
             }
         }
-
+        
         // 모달 창이 완전히 닫힐 때 이벤트
         $('#inputModal').on('hidden.bs.modal', function () {
             // 입력 필드 초기화
-            document.getElementById('aliasTextField').value = '';
-            document.getElementById('expiryDateField').value = '';
-            document.getElementById('openDateField').value = '';
-            document.getElementById('makeupField').value = '';
-            document.getElementById('quantityField').value = '';
-            document.getElementById('calculatedExpiryField').value = '';
-
+            const aliasTextField = document.getElementById('aliasTextField');
+            if (aliasTextField) aliasTextField.value = '';
+        
+            const expiryDateField = document.getElementById('expiryDateField');
+            if (expiryDateField) expiryDateField.value = '';
+        
+            const openDateField = document.getElementById('openDateField');
+            if (openDateField) openDateField.value = '';
+        
+            const makeupField = document.getElementById('makeupField');
+            if (makeupField) makeupField.value = '';
+        
+            const quantityField = document.getElementById('quantityField');
+            if (quantityField) quantityField.value = '';
+        
+            const calculatedExpiryField = document.getElementById('calculatedExpiryField');
+            if (calculatedExpiryField) calculatedExpiryField.value = '';
+        
             // 기타 초기화가 필요한 필드들
-            document.getElementById('categorySelect').value = '';
-            document.getElementById('fieldsContainer').style.display = 'none';
-            document.getElementById('generalFields').style.display = 'none';
-            document.getElementById('expiryField').style.display = 'none';
+            const categorySelect = document.getElementById('categorySelect');
+            if (categorySelect) categorySelect.value = '';
+        
+            const fieldsContainer = document.getElementById('fieldsContainer');
+            if (fieldsContainer) fieldsContainer.style.display = 'none';
+        
+            const generalFields = document.getElementById('generalFields');
+            if (generalFields) generalFields.style.display = 'none';
+        
+            const expiryField = document.getElementById('expiryField');
+            if (expiryField) expiryField.style.display = 'none';
         });
+        
 
         // '제품 등록하기'버튼을 누르면 데이터베이스에 저장됨   
         document.getElementById('registerButton').addEventListener('click', () => {

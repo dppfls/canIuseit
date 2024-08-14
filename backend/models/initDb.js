@@ -17,13 +17,13 @@ const initDb = async () => {
   ]);*/
 
   await Category.bulkCreate([
-    { id: 100, name: '화장품', shelfLifeDays: null},
-    { id: 101, name: '기초 화장품', shelfLifeDays: 365},
-    { id: 102, name: '클렌저', shelfLifeDays: 365},
-    { id: 103, name: '선크림', shelfLifeDays: 180},
-    { id: 200, name: '의약품', shelfLifeDays: null},
-    { id: 300, name: '식품', shelfLifeDays: null},
-    { id: 400, name: '기타', shelfLifeDays: null}
+    { categoryId: 100, name: '화장품', shelfLifeDays: null},
+    { categoryId: 101, name: '기초 화장품', shelfLifeDays: 365},
+    { categoryId: 102, name: '클렌저', shelfLifeDays: 365},
+    { categoryId: 103, name: '선크림', shelfLifeDays: 180},
+    { categoryId: 200, name: '의약품', shelfLifeDays: null},
+    { categoryId: 300, name: '식품', shelfLifeDays: null},
+    { categoryId: 400, name: '기타', shelfLifeDays: null}
   ], { ignoreDuplicates: true });  // 중복된 항목 무시
 };
 

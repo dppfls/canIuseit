@@ -17,7 +17,7 @@ const Product = sequelize.define('Product', {
         type: DataTypes.DATE,
         allowNull: true, // 소비기한은 선택 입력 항목
     },
-    category_id: {
+    categoryId: {
         type: DataTypes.INTEGER,
         references: {
             model: Category, // Category 모델을 참조
@@ -35,6 +35,6 @@ const Product = sequelize.define('Product', {
 });
 
 // Category와 Product 간의 관계 설정
-Product.belongsTo(Category, { foreignKey: 'category_id' });
+Product.belongsTo(Category, { foreignKey: 'categoryId' });
 
 module.exports = Product;
