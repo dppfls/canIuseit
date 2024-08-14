@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Category = require('../models/Category'); // Category 모델 불러오기
 const Product = require('../models/Product');   // Product 모델 불러오기
+const pdf = require('pdfkit');
+const path = require('path');
 
 // 제품 추가
 router.post('/register-product', async (req, res) => {
@@ -11,16 +13,16 @@ router.post('/register-product', async (req, res) => {
 
         // 로그가 안 출력되는 부분을 확인하기 위한 로그
         console.log('Starting categoryId parsing process');
-        
+
         const { alias, expiry_date, categoryId } = req.body;
-        
+
         // 로그인이 된 상태에서 userId를 가져옴
-        const userId = req.user ? req.user.userId : null; 
+        const userId = req.user ? req.user.userId : null;
 
         console.log('categoryId before parsing:', categoryId);
 
         // category_id를 숫자로 변환
-        const parsedCategoryId = parseInt(categoryId, 10); 
+        const parsedCategoryId = parseInt(categoryId, 10);
         console.log('Parsed categoryId:', parsedCategoryId);
 
         // 카테고리 ID가 유효한지 확인
@@ -58,7 +60,7 @@ router.post('/register-product', async (req, res) => {
 router.delete('/delete-product/:productId', async (req, res) => {
     try {
         const { productId } = req.params;
-        
+
         // 제품 삭제
         const result = await Product.destroy({ where: { productId: productId } });
 
@@ -73,9 +75,8 @@ router.delete('/delete-product/:productId', async (req, res) => {
     }
 });
 
-const pdf = require('pdfkit');  // PDFKit 모듈이 설치되어 있어야 합니다
-
-router.post('/labels', async (req, res) => {
+/*
+router.post('/api/products/labels', async (req, res) => {
     const { productId } = req.body;
     try {
         const product = await Product.findByPk(productId);
@@ -106,6 +107,46 @@ router.post('/labels', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('서버 내부 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+});
+*/
+
+// 제품 라벨지 출력 API
+router.post('/api/products/labels', async (req, res) => {
+    const { productId } = req.body;
+    try {
+        const product = await Product.findByPk(productId);
+        if (!product) {
+            return res.status(404).send('Product not found');
+        }
+
+        // 한국어 TTF 폰트 파일 경로 설정
+        const fontPath = path.join(__dirname, '..', 'frontend', 'resources', 'fonts', 'NOTOSANSKR-REGULAR.ttf');
+        console.log(`Font path: ${fontPath}`);
+    
+        const doc = new pdf();
+
+        console.log('PDF 생성 시작');
+        doc.registerFont('NotoSansKR', fontPath); // 폰트 등록
+        doc.font('NotoSansKR'); // 폰트 사용
+        console.log('폰트 등록 완료');
+
+        const expiryDate = new Date(product.expiry_date).toLocaleDateString('ko-KR');
+        doc.fontSize(12).text(`제품명: ${product.alias}`);
+        doc.text(`소비기한: ${expiryDate}`);
+        console.log('텍스트 추가 완료');
+
+        res.setHeader('Content-disposition', 'attachment; filename=label.pdf');
+        res.setHeader('Content-type', 'application/pdf');
+        doc.pipe(res);
+        doc.end();
+        console.log('PDF 생성 완료 및 전송 시작');
+
+        console.error('Error creating PDF:', error);
+        res.status(500).send('Internal Server Error');
+    } catch (error) {
+        console.error('Error creating PDF:', error);
+        res.status(500).send('Internal Server Error');
     }
 });
 
