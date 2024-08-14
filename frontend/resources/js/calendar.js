@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
       locale: 'ko', // 한국어 로케일 설정
 
 
+      eventTimeFormat: false,
 
       eventAdd: function(obj) { 
         console.log(obj);
