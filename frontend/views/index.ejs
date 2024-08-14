@@ -279,7 +279,7 @@
         document.getElementById('registerButton').addEventListener('click', () => {
             const alias = document.getElementById('aliasTextField').value;
             const expiry_date = document.getElementById('calculatedExpiryField').value;
-            let category_id = document.getElementById('categorySelect').value;
+            let categoryId = document.getElementById('categorySelect').value;
 
             // 입력값 검증
             if (!alias) {
@@ -292,16 +292,16 @@
                 return;  // 입력이 없으면 함수 종료
             }
 
-            if (category_id === '100') {
+            if (categoryId === '100') {
                 const makeupField = document.getElementById('makeupField').value;
                 if (makeupField) {
-                    category_id = makeupField; // 서브 카테고리가 선택되면 category_id를 해당 값으로 설정
+                    categoryId = makeupField; // 서브 카테고리가 선택되면 categoryId를 해당 값으로 설정
                 }
             }
 
             console.log('Alias:', alias);
             console.log('Expiry Date:', expiry_date);
-            console.log('Category ID:', category_id);
+            console.log('Category ID:', categoryId);
 
             // POST 요청으로 서버에 데이터 전송
             fetch('/api/products/register-product', {
@@ -312,7 +312,7 @@
                 body: JSON.stringify({
                     alias: alias,
                     expiry_date: expiry_date,
-                    category_id: category_id
+                    categoryId: categoryId
                 }),
             })
                 .then(response => {
