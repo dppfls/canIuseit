@@ -3,6 +3,7 @@ const router = express.Router();
 const Category = require('../models/Category'); // Category 모델 불러오기
 const Product = require('../models/Product');   // Product 모델 불러오기
 
+// 제품 추가
 router.post('/register-product', async (req, res) => {
     try {
         console.log('POST /api/products/register-product request received');
@@ -12,12 +13,15 @@ router.post('/register-product', async (req, res) => {
         console.log('Starting categoryId parsing process');
         
         const { alias, expiry_date, categoryId } = req.body;
+        
+        // 로그인이 된 상태에서 userId를 가져옴
+        const userId = req.user ? req.user.userId : null; 
 
-        console.log('category_id before parsing:', categoryId);
+        console.log('categoryId before parsing:', categoryId);
 
         // category_id를 숫자로 변환
         const parsedCategoryId = parseInt(categoryId, 10); 
-        console.log('Parsed category_id:', parsedCategoryId);
+        console.log('Parsed categoryId:', parsedCategoryId);
 
         // 카테고리 ID가 유효한지 확인
         const category = await Category.findByPk(parsedCategoryId);
@@ -28,11 +32,16 @@ router.post('/register-product', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Invalid category ID' });
         }
 
+        if (!userId) {
+            return res.status(400).json({ success: false, message: 'User not logged in' });
+        }
+
         // 새로운 제품을 products 테이블에 추가
         const newProduct = await Product.create({
             alias: alias,
             expiry_date: expiry_date,
-            categoryId: category.categoryId // 외래 키로 categoryId 사용
+            categoryId: category.categoryId, // 외래 키로 categoryId 사용
+            userId: userId // 로그인된 사용자의 ID를 저장
         });
 
         console.log('New product saved:', newProduct);
@@ -74,10 +83,10 @@ router.post('/labels', async (req, res) => {
             return res.status(404).send('물건이 존재하지 않습니다');
         }
 
-        // 소비기한을 Date 객체로 변환
+        // product.expiry_date를 Date 객체로 강제 변환
         const expiryDate = new Date(product.expiry_date);
 
-        // 날짜를 수동으로 YYYY-MM-DD 형식으로 변환
+        // 날짜를 YYYY-MM-DD 형식으로 변환
         const year = expiryDate.getFullYear();
         const month = String(expiryDate.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 필요
         const day = String(expiryDate.getDate()).padStart(2, '0');
