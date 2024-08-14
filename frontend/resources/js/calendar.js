@@ -21,7 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
         mySaveButton: {
           text: "저장",
           click: async function () {
-            // 지금까지 생성된 모든 이벤트 저장하기
+            if (confirm("저장하시겠습니까?")){
+               // 지금까지 생성된 모든 이벤트 저장하기
             var allEvent = calendar.getEvents();
             // 이벤트 저장하기
             const saveEvent = await axios({
@@ -31,7 +32,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
           }
         }
-      },
+      }
+    },
 
       // 헤더에 표시할 툴바
       headerToolbar: {
