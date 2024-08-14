@@ -9,17 +9,6 @@ require('dotenv').config();
 const app = express();
 app.use(bodyParser.json());
 
-// 제품 목록 조회 API
-app.get('/products', async (req, res) => {
-  try {
-    const products = await Product.findAll();
-    res.json(products);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('서버 내부 오류가 발생했습니다.\n 다시 시도해주세요.');
-  }
-});
-
 // Google Calendar API 설정
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,

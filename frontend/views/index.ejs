@@ -146,7 +146,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                    <button type="button" class="btn btn-primary" id="registerButton">저장하기</button>
+                    <button type="button" class="btn btn-primary" id="registerButton">등록하기</button>
                 </div>
             </div>
         </div>
@@ -257,73 +257,36 @@
                     }
                 }
 
-                // 모달 창이 완전히 닫힐 때 이벤트
-                $('#inputModal').on('hidden.bs.modal', function () {
-                    // 입력 필드 초기화
-                    const aliasTextField = document.getElementById('aliasTextField');
-                    if (aliasTextField) aliasTextField.value = '';
-
-                    const expiryDateField = document.getElementById('expiryDateField');
-                    if (expiryDateField) expiryDateField.value = '';
-
-                    const openDateField = document.getElementById('openDateField');
-                    if (openDateField) openDateField.value = '';
-
-                    const makeupField = document.getElementById('makeupField');
-                    if (makeupField) makeupField.value = '';
-
-                    const quantityField = document.getElementById('quantityField');
-                    if (quantityField) quantityField.value = '';
-
-                    const calculatedExpiryField = document.getElementById('calculatedExpiryField');
-                    if (calculatedExpiryField) calculatedExpiryField.value = '';
-
-                    // 기타 초기화가 필요한 필드들
-                    const categorySelect = document.getElementById('categorySelect');
-                    if (categorySelect) categorySelect.value = '';
-
-                    const fieldsContainer = document.getElementById('fieldsContainer');
-                    if (fieldsContainer) fieldsContainer.style.display = 'none';
-
-                    const generalFields = document.getElementById('generalFields');
-                    if (generalFields) generalFields.style.display = 'none';
-
-                    const expiryField = document.getElementById('expiryField');
-                    if (expiryField) expiryField.style.display = 'none';
-                });
-
-
-
-                // '제품 등록하기'버튼을 누르면 데이터베이스에 저장됨   
+                // '등록하기'버튼을 누르면 데이터베이스에 저장됨   
                 document.getElementById('registerButton').addEventListener('click', () => {
                     // userId가 설정되어 있는지 확인
                     if (!userId || userId === 'null') {
                         alert('로그인이 필요합니다.');
                         return;  // 로그인하지 않은 경우 서버에 요청을 보내지 않음
                     }
-
+                
                     const alias = document.getElementById('aliasTextField').value;
                     const expiry_date = document.getElementById('calculatedExpiryField').value;
                     let categoryId = document.getElementById('categorySelect').value;
-
+                
                     // 입력값 검증
                     if (!alias) {
                         alert('별칭은 필수 입력 항목입니다.');
                         return;  // 입력이 없으면 함수 종료
                     }
-
+                
                     if (!expiry_date) {
                         alert('소비기한은 필수 입력 항목입니다.');
                         return;  // 입력이 없으면 함수 종료
                     }
-
+                
                     if (categoryId === '100') {
                         const makeupField = document.getElementById('makeupField').value;
                         if (makeupField) {
                             categoryId = makeupField; // 서브 카테고리가 선택되면 categoryId를 해당 값으로 설정
                         }
                     }
-
+                
                     // POST 요청으로 서버에 데이터 전송
                     fetch('/api/products/register-product', {
                         method: 'POST',
@@ -337,27 +300,65 @@
                             userId: userId // userId를 요청에 포함
                         }),
                     })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.success) {
-                                alert('Product registered successfully!');
-                                // 필요시 모달 닫기 또는 폼 리셋
-                            } else {
-                                alert('Failed to register product.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('An error occurred while registering the product. Please try again later.');
-                        });
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            alert('Product registered successfully!');
+                            // 모달 창 초기화
+                            resetModal();
+                        } else {
+                            alert('Failed to register product.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while registering the product. Please try again later.');
+                    });
                 });
-
-
+                
+                // 모달창 초기화
+                function resetModal() {
+                    // 입력 필드 초기화
+                    const aliasTextField = document.getElementById('aliasTextField');
+                    if (aliasTextField) aliasTextField.value = '';
+                
+                    const expiryDateField = document.getElementById('expiryDateField');
+                    if (expiryDateField) expiryDateField.value = '';
+                
+                    const openDateField = document.getElementById('openDateField');
+                    if (openDateField) openDateField.value = '';
+                
+                    const makeupField = document.getElementById('makeupField');
+                    if (makeupField) makeupField.value = '';
+                
+                    const quantityField = document.getElementById('quantityField');
+                    if (quantityField) quantityField.value = '';
+                
+                    const calculatedExpiryField = document.getElementById('calculatedExpiryField');
+                    if (calculatedExpiryField) calculatedExpiryField.value = '';
+                
+                    // 카테고리 선택 및 필드들 초기화
+                    const categorySelect = document.getElementById('categorySelect');
+                    if (categorySelect) categorySelect.value = '';
+                
+                    const fieldsContainer = document.getElementById('fieldsContainer');
+                    if (fieldsContainer) fieldsContainer.style.display = 'none';
+                
+                    const generalFields = document.getElementById('generalFields');
+                    if (generalFields) generalFields.style.display = 'none';
+                
+                    const expiryField = document.getElementById('expiryField');
+                    if (expiryField) expiryField.style.display = 'none';
+                    
+                    // 모달 창을 닫기
+                    $('#inputModal').modal('hide');
+                }
+                
             </script>
 </body>
 

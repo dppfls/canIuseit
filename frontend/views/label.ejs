@@ -105,7 +105,7 @@
       // 라벨 출력 버튼 클릭 시 PDF 다운로드
       document.getElementById('print-button').addEventListener('click', function () {
         const productId = parseInt('<%= productId %>', 10); // URL 쿼리로 받은 제품 ID를 사용
-        fetch('/labels', {
+        fetch('/api/products/labels', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

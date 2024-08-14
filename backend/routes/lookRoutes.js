@@ -2,10 +2,12 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
 
-// ensureAuthenticated는 사용자가 로그인했는지 확인하는 미들웨어 (예시)
-const { ensureAuthenticated } = require('../middleware/authMid');
+router.get('/', async (req, res) => {
+    if (!req.user) {
+        // 로그인이 안 된 경우 경고 메시지를 보여줍니다.
+        return res.render('look', { user: null, products: [], warning: '로그인 후 이용해주세요.' });
+    }
 
-router.get('/', ensureAuthenticated, async (req, res) => {
     try {
         const userId = req.user.userId; // 현재 로그인된 사용자의 userId 가져오기
         console.log(`Logged in userId: ${userId}`);
@@ -17,10 +19,10 @@ router.get('/', ensureAuthenticated, async (req, res) => {
 
         console.log('Products retrieved:', products); // 로그를 추가하여 데이터 확인
 
-        res.render('look', { products: products });
+        res.render('look', { user: req.user, products: products });
     } catch (error) {
         console.error('Error fetching products:', error);
-        res.render('look', { products: [] });
+        res.render('look', { user: req.user, products: [] });
     }
 });
 
