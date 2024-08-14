@@ -1,6 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const Category = require('./Category');
+const User = require('./User'); // User 모델을 불러옴
 
 // Product 모델 정의
 const Product = sequelize.define('Product', {
@@ -25,6 +26,14 @@ const Product = sequelize.define('Product', {
         },
         allowNull: false, // 카테고리 ID는 필수 입력 항목
     },
+    userId: { // User 모델을 참조하는 필드 추가
+        type: DataTypes.INTEGER,
+        references: {
+            model: User, // User 모델을 참조
+            key: 'userId',
+        },
+        allowNull: false, // 사용자 ID는 필수 입력 항목
+    },
     created_at: {
         type: DataTypes.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), // 생성 시 자동으로 현재 시간 설정
@@ -36,5 +45,8 @@ const Product = sequelize.define('Product', {
 
 // Category와 Product 간의 관계 설정
 Product.belongsTo(Category, { foreignKey: 'categoryId' });
+
+// User와 Product 간의 관계 설정
+Product.belongsTo(User, { foreignKey: 'userId' });
 
 module.exports = Product;

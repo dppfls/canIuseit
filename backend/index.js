@@ -30,10 +30,8 @@ app.use(session({
     saveUninitialized: false,
     store: new SequelizeStore({
         db: sequelize,
-    }),
-    cookie: { secure: false }  // HTTPS 사용 시 true로 설정
+    })
 }));
-
 
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'resources')));
 
@@ -61,9 +59,7 @@ app.use((req, res, next) => {
 app.use('/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/look', lookRoutes);
-//app.use('/', calendarRoutes);
-app.use('/calendar', require('./routes/calendarRoutes'));
-
+app.use('/calendar', require('./routes/calendarRoutes'))
 
 // 정적 파일 제공 설정
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'resources')));
@@ -77,9 +73,8 @@ app.get('/', (req, res) => {
     res.render('index', { user: req.user });
 });
 
-app.get('/look', (req, res) => {
-    res.render('look', { user: req.user });
-});
+// /look 경로를 lookRoutes.js에서 처리하도록 연결
+app.use('/look', lookRoutes);
 
 app.get('/calendar', (req, res) => {
     if (!req.user) {
@@ -97,7 +92,16 @@ app.get('/label', (req, res) => {
     res.render('label', { user: req.user, productName, expiryDate, productId });
 });
 
-
+// 세션 설정
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'default_secret',
+    resave: false,
+    saveUninitialized: false,
+    store: new SequelizeStore({
+        db: sequelize,
+    }),
+    cookie: { secure: false }  // HTTPS 사용 시 true로 설정
+}));
 
 
 // 보호된 라우트 예시 (로그인 필요)
