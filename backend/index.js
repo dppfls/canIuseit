@@ -89,9 +89,12 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/label', (req, res) => {
-    const { productName, expiryDate } = req.query;
-    res.render('label', { user: req.user, productName, expiryDate });
+    const { productName, expiryDate, productId } = req.query; // productId 추가
+    res.render('label', { user: req.user, productName, expiryDate, productId });
 });
+
+
+
 
 // 보호된 라우트 예시 (로그인 필요)
 app.get('/protected', ensureAuthenticated, (req, res) => {

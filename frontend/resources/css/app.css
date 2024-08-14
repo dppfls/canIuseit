@@ -239,51 +239,61 @@
     width: 200px;
   }
   
-  /* 등록한 제품 조회 창 스타일*/
-  .look {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start; /* 왼쪽 정렬 */
-  }
-  
-  #basket {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: stretch;
-  }
-  
-  .card {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .card-body {
-    flex: 1;
-  }
-  
-  .card-footer {
-    text-align: center;
-    margin-top: auto;
-  }
-  
-  /* 사이즈 조정 */
-  @media (min-width: 768px) {
-    #basket {
-      max-width: 32%;
-    }
-  }
-  
-  @media (min-width: 992px) {
-    #basket {
-      max-width: 30%;
-    }
-  }
-
-  #categoryFilter {
-    margin-bottom: 30px; /* 선택 메뉴와 제품 목록 사이의 간격 */
+/* 등록한 제품 조회 창 스타일 */
+#productGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* 카드들을 왼쪽 정렬 */
 }
+
+.product-item {
+  flex-basis: calc(33.3333% - 20px); /* 각 카드의 크기 설정 */
+  max-width: calc(33.3333% - 20px); /* 최대 너비 설정 */
+  box-sizing: border-box; /* 패딩과 보더를 너비/높이 계산에 포함 */
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 200px; /* 카드의 고정 높이 설정 */
+  box-sizing: border-box;
+  margin-bottom: 20px; /* 카드들 사이의 간격 추가 */
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body .mt-auto {
+  margin-top: auto; /* 소비기한을 하단으로 이동 */
+}
+
+.card-footer {
+  margin-top: auto; /* 푸터를 카드 하단에 고정 */
+  padding: 0.5rem 0;
+}
+
+/* 화면 크기에 따른 카드 크기 조정 */
+@media (min-width: 576px) {
+  .product-item {
+    flex-basis: calc(50% - 20px); /* 작은 화면에서 두 개의 카드 배치 */
+  }
+}
+
+@media (min-width: 768px) {
+  .product-item {
+    flex-basis: calc(33.3333% - 20px); /* 중간 화면 이상에서 세 개의 카드 배치 */
+  }
+}
+
+
+/* 드롭다운 필터 */
+#categoryFilter {
+  margin-bottom: 30px; /* 선택 메뉴와 제품 목록 사이의 간격 */
+}
+
 
   
   /* FullCalendar 관련 스타일 */

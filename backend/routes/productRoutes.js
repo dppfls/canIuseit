@@ -64,31 +64,40 @@ router.delete('/delete-product/:productId', async (req, res) => {
     }
 });
 
-// 라벨 출력 API -> pdf 형식의 문서 생성되도록
+const pdf = require('pdfkit');  // PDFKit 모듈이 설치되어 있어야 합니다
+
 router.post('/labels', async (req, res) => {
-    const { productId } = req.body;  // POST 요청으로 전달된 productId를 받음
+    const { productId } = req.body;
     try {
-      const product = await Product.findByPk(productId);  // productId를 이용해 제품을 찾음
-      if (!product) {
-        return res.status(404).send('물건이 존재하지 않습니다');
-      }
-  
-      // PDF 생성
-      const doc = new pdf();
-      doc.fontSize(12); // 프린트할 라벨지가 작을 것 같아서 폰트 사이즈도 작게 설정
-      doc.text(`제품명: ${product.alias}`);
-      doc.text(`소비기한: ${product.expiry_date}`);
-  
-      // PDF 프린트 아웃
-      res.setHeader('Content-disposition', 'attachment; filename=label.pdf');
-      res.setHeader('Content-type', 'application/pdf');
-      doc.pipe(res);
-      doc.end();
+        const product = await Product.findByPk(productId);
+        if (!product) {
+            return res.status(404).send('물건이 존재하지 않습니다');
+        }
+
+        // 소비기한을 Date 객체로 변환
+        const expiryDate = new Date(product.expiry_date);
+
+        // 날짜를 수동으로 YYYY-MM-DD 형식으로 변환
+        const year = expiryDate.getFullYear();
+        const month = String(expiryDate.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 필요
+        const day = String(expiryDate.getDate()).padStart(2, '0');
+        const formattedExpiryDate = `${year}-${month}-${day}`;
+
+        // PDF 생성
+        const doc = new pdf();
+        doc.fontSize(12);
+        doc.text(`제품명: ${product.alias}`);
+        doc.text(`소비기한: ${formattedExpiryDate}`);
+
+        // PDF 프린트 아웃
+        res.setHeader('Content-disposition', 'attachment; filename=label.pdf');
+        res.setHeader('Content-type', 'application/pdf');
+        doc.pipe(res);
+        doc.end();
     } catch (error) {
-      console.error(error);
-      res.status(500).send('서버 내부 오류가 발생했습니다. 다시 시도해주세요.');
+        console.error(error);
+        res.status(500).send('서버 내부 오류가 발생했습니다. 다시 시도해주세요.');
     }
-  });
-  
+});
 
 module.exports = router;
