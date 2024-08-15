@@ -69,6 +69,15 @@
                 </div>
                 <div class="modal-body">
                     <!-- 기존 입력 필드를 모달 내로 이동 -->
+                    <!-- 파일 업로드 필드 추가 -->
+                    <div class="file-upload-container text-center mt-3">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <input type="text" class="form-control" value="제품 사진 업로드" readonly style="width: 48%;">
+                            <input type="file" class="form-control" id="productImage" accept="image/*"
+                                style="width: 48%;">
+                        </div>
+                    </div>
+
                     <div class="alias-container text-center mt-3">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <input type="text" class="form-control" value="별칭" readonly style="width: 48%;">
@@ -131,7 +140,6 @@
                                     <option value="3Year">
                                 </datalist>
                             </div>
-
                             <h3
                                 style="font-size: 30px; color: black; margin-top: 20px; width: 100%; display: inline-block;">
                                 ▶</h3>
@@ -264,101 +272,104 @@
                         alert('로그인이 필요합니다.');
                         return;  // 로그인하지 않은 경우 서버에 요청을 보내지 않음
                     }
-                
+
                     const alias = document.getElementById('aliasTextField').value;
                     const expiry_date = document.getElementById('calculatedExpiryField').value;
                     let categoryId = document.getElementById('categorySelect').value;
-                
+                    const productImage = document.getElementById('productImage').files[0]; // 파일 가져오기
+
                     // 입력값 검증
                     if (!alias) {
                         alert('별칭은 필수 입력 항목입니다.');
                         return;  // 입력이 없으면 함수 종료
                     }
-                
+
                     if (!expiry_date) {
                         alert('소비기한은 필수 입력 항목입니다.');
                         return;  // 입력이 없으면 함수 종료
                     }
-                
+
                     if (categoryId === '100') {
                         const makeupField = document.getElementById('makeupField').value;
                         if (makeupField) {
                             categoryId = makeupField; // 서브 카테고리가 선택되면 categoryId를 해당 값으로 설정
                         }
                     }
-                
+
+                    // FormData 객체 생성 및 데이터 추가
+                    const formData = new FormData();
+                    formData.append('alias', alias);
+                    formData.append('expiry_date', expiry_date);
+                    formData.append('categoryId', categoryId);
+                    formData.append('userId', userId); // userId를 요청에 포함
+                    if (productImage) {
+                        formData.append('productImage', productImage); // 파일을 FormData에 추가
+                    }
+
                     // POST 요청으로 서버에 데이터 전송
                     fetch('/api/products/register-product', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            alias: alias,
-                            expiry_date: expiry_date,
-                            categoryId: categoryId,
-                            userId: userId // userId를 요청에 포함
-                        }),
+                        body: formData, // FormData를 사용하여 전송
                     })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            alert('Product registered successfully!');
-                            // 모달 창 초기화
-                            resetModal();
-                        } else {
-                            alert('Failed to register product.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred while registering the product. Please try again later.');
-                    });
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                alert('Product registered successfully!');
+                                // 모달 창 초기화
+                                resetModal();
+                            } else {
+                                alert('Failed to register product.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred while registering the product. Please try again later.');
+                        });
                 });
-                
+
                 // 모달창 초기화
                 function resetModal() {
                     // 입력 필드 초기화
                     const aliasTextField = document.getElementById('aliasTextField');
                     if (aliasTextField) aliasTextField.value = '';
-                
+
                     const expiryDateField = document.getElementById('expiryDateField');
                     if (expiryDateField) expiryDateField.value = '';
-                
+
                     const openDateField = document.getElementById('openDateField');
                     if (openDateField) openDateField.value = '';
-                
+
                     const makeupField = document.getElementById('makeupField');
                     if (makeupField) makeupField.value = '';
-                
+
                     const quantityField = document.getElementById('quantityField');
                     if (quantityField) quantityField.value = '';
-                
+
                     const calculatedExpiryField = document.getElementById('calculatedExpiryField');
                     if (calculatedExpiryField) calculatedExpiryField.value = '';
-                
+
                     // 카테고리 선택 및 필드들 초기화
                     const categorySelect = document.getElementById('categorySelect');
                     if (categorySelect) categorySelect.value = '';
-                
+
                     const fieldsContainer = document.getElementById('fieldsContainer');
                     if (fieldsContainer) fieldsContainer.style.display = 'none';
-                
+
                     const generalFields = document.getElementById('generalFields');
                     if (generalFields) generalFields.style.display = 'none';
-                
+
                     const expiryField = document.getElementById('expiryField');
                     if (expiryField) expiryField.style.display = 'none';
-                    
+
                     // 모달 창을 닫기
                     $('#inputModal').modal('hide');
                 }
-                
+
             </script>
 </body>
 

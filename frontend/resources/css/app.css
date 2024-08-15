@@ -83,7 +83,7 @@
   .alias-container,
   .category-select-container,
   .fields-container {
-    margin-bottom: 2rem; /* 컨테이너 간 간격 조정 */
+    margin-bottom: 0.5rem; /* 컨테이너 간 간격 조정 */
     width: 100%; /* 너비를 100%로 설정하여 중앙 정렬 */
   }
   
@@ -96,19 +96,17 @@
   /* 모달창 내부 수평 정렬 */
   .btn-category {
     margin-top: 1rem;
-    padding: 0.75rem 1.5rem;
+    padding: 0.5rem 1.5rem;
   }
-
-  .alias-container,
-.category-select-container {
-    margin-bottom: 2rem;
-    width: 100%;
-}
 
 .alias-container input,
 .category-select-container select,
 .category-select-container button {
     margin-top: 0; /* 상단 여백 제거 */
+}
+
+.file-upload-container input + input {
+  margin-left: 4%; /* 입력 필드들 사이 간격 설정 */
 }
 
 .alias-container input + input {
@@ -117,6 +115,10 @@
 
 .category-select-container select + button {
     margin-left: 4%;
+}
+
+.calculatedExpiryField{
+  margin-bottom: 0%;
 }
 
   
@@ -252,6 +254,20 @@
   box-sizing: border-box; /* 패딩과 보더를 너비/높이 계산에 포함 */
 }
 
+.product-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* 이미지 컨테이너의 고정 높이 */
+  background-color: #f8f9fa; /* 이미지가 없는 경우에 배경 색상 추가 */
+}
+
+.product-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* 이미지를 컨테이너 안에 맞춤 */
+}
+
 .card {
   display: flex;
   flex-direction: column;
@@ -274,6 +290,47 @@
   margin-top: auto; /* 푸터를 카드 하단에 고정 */
   padding: 0.5rem 0;
 }
+
+/* 정렬 스타일2 레이아웃 */
+/* 스타일2 레이아웃 */
+.style2-layout {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 15px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.style2-card {
+  display: flex;
+  width: 100%;
+  border: none;
+  box-shadow: none;
+}
+
+.style2-card .product-image {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  margin-right: 20px;
+}
+
+.style2-card .card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.style2-card .card-body .h4 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.style2-card .card-body .h5 {
+  font-size: 16px;
+}
+
+
 
 /* 화면 크기에 따른 카드 크기 조정 */
 @media (min-width: 576px) {

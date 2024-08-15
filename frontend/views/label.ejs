@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,13 +8,15 @@
   <link rel="stylesheet" href="/css/bootstrap.css">
   <link rel="stylesheet" href="/css/app.css">
 </head>
+
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-xl">
       <a class="navbar-brand" href="/">
         <img src="/images/logo.png" alt="써도되나" title="써도되나">
       </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse m-5" id="navbarSupportedContent">
@@ -34,43 +37,43 @@
         <!-- 로그인 상태에 따라 로그인/로그아웃 버튼 표시 -->
         <% if (user) { %>
           <button class="btn btn-look" id="logoutButton">로그아웃</button>
-        <% } else { %>
-          <button class="btn btn-look" onClick="location.href='/login'">로그인</button>
-        <% } %>
+          <% } else { %>
+            <button class="btn btn-look" onClick="location.href='/login'">로그인</button>
+            <% } %>
       </div>
     </div>
   </nav>
-        <div class="container-xl">
-            <div class="label-text">
-            <p class="h2 mb-0 mt-5 text-black font-weight-bolder ml-5 text-left d-block">라벨지 출력하기</p>
-            <p class="h5 mt-3 mb-5 text-black text-left d-block ml-5">제품에 붙일 수 있도록 라벨기와 연동되어 있어요. 이제 오프라인에서도 소비기한을 확인하세요.</p>
-            </div>
-        </div>
+  <div class="container-xl">
+    <div class="label-text">
+      <p class="h2 mb-0 mt-5 text-black font-weight-bolder ml-5 text-left d-block">라벨지 출력하기</p>
+      <p class="h5 mt-3 mb-5 text-black text-left d-block ml-5">제품에 붙일 수 있도록 라벨기와 연동되어 있어요. 이제 오프라인에서도 소비기한을 확인하세요.</p>
+    </div>
+  </div>
 
-     <div class="container-xl mt-5">
-        <section id="product" class="product-section">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <!--
-                    <div class="col-md-6">
-                        <img src="/images/2.jpg" class="medicine w-100" alt=" "> 
-                    </div> -->
-                    <!-- look에서 라벨지 출력을 누르면 해당 제품이 나올 수 있도록 제작해야함 
-                    <div class="col-md-6 product-details"> 
-                        <p class="h2 mb-0 mt-6 text-black font-weight-bolder ml-5 text-left d-block">체리맛 감기약</p>
-                        <p class="h5 mb-0 mt-2 text-black ml-5 text-left d-block">소비기한: 2000-00-00</p>
-                        <button class="btn btn-look btn-block" id="print-button">눌러서 출력하기</button>
-                    </div> -->
-                    <div class="col-md-6 product-details"> 
-                      <p class="h2 mb-0 mt-6 text-black font-weight-bolder ml-5 text-left d-block"><%= productName %></p>
-                      <p class="h5 mb-0 mt-2 text-black ml-5 text-left d-block">소비기한: <%= expiryDate %></p>
-                      <button class="btn btn-look btn-block" id="print-button">눌러서 출력하기</button>
-                    </div>
-                  
-                </div>
-            </div>
-        </section>
-     </div>
+  <div class="container-xl mt-5">
+    <section id="product" class="product-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <% if (productImagePath) { %>
+              <img src="<%= productImagePath %>" class="productImage" alt="<%= productName %>">
+              <% } else { %>
+                <p class="h5 text-center text-muted">등록된 이미지가 없습니다.</p>
+              <% } %>
+          </div>
+          <div class="col-md-6 product-details">
+            <p class="h2 mb-0 mt-6 text-black font-weight-bolder ml-5 text-left d-block">
+              <%= productName %>
+            </p>
+            <p class="h5 mb-0 mt-2 text-black ml-5 text-left d-block">소비기한: <%= expiryDate %>
+            </p>
+            <button class="btn btn-look btn-block" id="print-button">눌러서 출력하기</button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
 
   <footer id="footer">
     <div class="container-xl">
@@ -90,28 +93,28 @@
             method: 'GET',
             credentials: 'include'
           })
-          .then(response => {
-            if (response.redirected) {
-              window.location.href = response.url;
-            }
-          })
-          .catch(error => {
-            console.error('Logout error:', error);
-          });
+            .then(response => {
+              if (response.redirected) {
+                window.location.href = response.url;
+              }
+            })
+            .catch(error => {
+              console.error('Logout error:', error);
+            });
         });
       }
     });
 
-      // 라벨 출력 버튼 클릭 시 PDF 다운로드
-      document.getElementById('print-button').addEventListener('click', function () {
-        const productId = parseInt('<%= productId %>', 10); // URL 쿼리로 받은 제품 ID를 사용
-        fetch('/api/products/labels', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ productId }),  // 제품 ID를 POST 요청으로 보냄
-        })
+    // 라벨 출력 버튼 클릭 시 PDF 다운로드
+    document.getElementById('print-button').addEventListener('click', function () {
+      const productId = parseInt('<%= productId %>', 10); // URL 쿼리로 받은 제품 ID를 사용
+      fetch('/api/labels/labels', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId }),  // 제품 ID를 POST 요청으로 보냄
+      })
         .then(response => response.blob())
         .then(blob => {
           const url = window.URL.createObjectURL(blob);
@@ -123,8 +126,9 @@
           a.remove();
         })
         .catch(error => console.error('Error:', error));
-      });
-    
+    });
+
   </script>
 </body>
+
 </html>
