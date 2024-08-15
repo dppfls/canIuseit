@@ -15,7 +15,6 @@
       <a class="navbar-brand" href="/">
         <img src="/images/logo.png" alt="써도되나" title="써도되나">
       </a>
-      <!-- 모바일 버전에서 상호작용 가능한 버튼. 마우스를 올리면 메인 메뉴 보임. -->
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -36,7 +35,6 @@
             <a class="nav-link" href="/calendar">캘린더 일정 확인하기</a>
           </li>
         </ul>
-        <!-- 로그인 상태에 따라 로그인/로그아웃 버튼 표시 -->
         <% if (user) { %>
           <button class="btn btn-look" id="logoutButton">로그아웃</button>
           <% } else { %>
@@ -49,11 +47,10 @@
   <div class="look-image">
     <div class="look-text">
       <p class="h0 mb-0 mt-5 text-black font-weight-bolder text-center d-block">내 제품 소비기한 한 눈에 보기</p>
-      <p class="h4 mt-3 mb-5 text-black text-center d-block">그동한 조회했던 제품들의 소비기한을 모아봤어요.</p>
+      <p class="h4 mt-3 mb-5 text-black text-center d-block">그동안 조회했던 제품들의 소비기한을 모아봤어요.</p>
     </div>
   </div>
 
-  <!-- 카테고리 선택 드롭다운 메뉴와 정렬 드롭다운 메뉴 -->
   <div class="container-xl text-center mt-3 d-flex justify-content-center align-items-center">
     <select id="styleFilter" class="form-control" style="max-width: 300px; margin-right: 10px;">
       <option value="style1" selected>정렬 스타일1</option>
@@ -74,206 +71,209 @@
     </select>
   </div>
 
-
   <div class="container-xl mt-5 look">
     <% if (!user) { %>
-      <div class="alert alert-warning" role="alert">
-        로그인 후 이용해주세요.
-      </div>
+      <div class="alert alert-warning" role="alert">로그인 후 이용해주세요.</div>
       <% } else if (products.length===0) { %>
-        <div class="alert alert-info" role="alert">
-          등록된 제품이 없습니다.
-        </div>
+        <div class="alert alert-info" role="alert">등록된 제품이 없습니다.</div>
         <% } else { %>
-          <div id="productGrid" class="row">
-            <% products.forEach((product, index)=> { %>
-              <div class="col-md-4 col-sm-6 col-xs-12 mb-4 product-item" data-category="<%= product.categoryId %>"
-                data-product-created="<%= product.created_at.toISOString() %>">
+          <div id="productData" data-products="<%= encodeURIComponent(JSON.stringify(products)) %>"></div>
+          <div id="productGrid" class="style1"></div>
+          <% } %>
+  </div>
+
+  <footer id="footer">
+    <div class="container-xl">
+      <div class="line mt-5"></div>
+      <img src="/images/logo.png" class="mt-5" alt="">
+      <img src="/images/sns.png" class="d-block mt-2 sns" alt="">
+      <p class="text-dark">Copyright(c) 2024 써도 되나?. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      const logoutButton = document.getElementById('logoutButton');
+      if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+          fetch('/auth/logout', { method: 'GET', credentials: 'include' })
+            .then(response => {
+              if (response.redirected) window.location.href = response.url;
+            })
+            .catch(error => console.error('Logout error:', error));
+        });
+      }
+
+      // 서버에서 전달된 제품 목록을 가져와 파싱
+      const encodedProducts = document.getElementById('productData').getAttribute('data-products');
+      let products = JSON.parse(decodeURIComponent(encodedProducts));
+
+      // 초기 렌더링: 최신 등록순으로 정렬 및 스타일1로 적용
+      applyLayoutStyle('style1');
+      sortProducts('newest');
+
+      // 정렬 선택 시 정렬 변경
+      document.getElementById('sortFilter').addEventListener('change', function () {
+        sortProducts(this.value);
+      });
+
+      // 스타일 변경 시 레이아웃 변경
+      document.getElementById('styleFilter').addEventListener('change', function () {
+        applyLayoutStyle(this.value);
+        filterByCategory(); // 스타일 변경 후 카테고리 필터링 유지
+      });
+
+      // 카테고리 선택 시 필터링
+      document.getElementById('categoryFilter').addEventListener('change', function () {
+        filterByCategory();
+      });
+
+      // 스타일에 따라 제품 목록 렌더링
+      function applyLayoutStyle(style) {
+        const productGrid = document.getElementById('productGrid');
+
+        // 필요한 클래스를 추가 및 제거
+        if (style === 'style1') {
+          productGrid.classList.remove('style2');
+          productGrid.classList.add('style1');
+        } else if (style === 'style2') {
+          productGrid.classList.remove('style1');
+          productGrid.classList.add('style2');
+        }
+        // row 클래스 동적 적용
+        if (style === 'style1') {
+          productGrid.classList.add('row');  // style1일 경우 row 추가
+        } else {
+          productGrid.classList.remove('row');  // style2일 경우 row 제거
+        }
+
+        let productHtml = '';
+
+        products.forEach(product => {
+          const expiryDate = product.expiry_date ? new Date(product.expiry_date).toISOString().split('T')[0] : 'N/A';
+          if (style === 'style1') {
+            // 스타일 1 (카드형 레이아웃)
+            productHtml += `
+        <div class="col-md-4 col-sm-6 col-xs-12 mb-4 product-item" data-category="${product.categoryId}" data-product-created="${new Date(product.created_at).toISOString()}">
+          <div class="card h-100">
+            <div class="card-body d-flex flex-column">
+              <div class="d-flex justify-content-between align-items-center">
+                <p class="font-weight-bolder d-block h4 mb-0">${product.alias}</p>
+                <a href="#" class="btn delete-product-btn" data-product-id="${product.productId}" style="background-color: #f28c91; color: white; padding: 0.25rem 0.5rem;">삭제</a>
+              </div>
+              <div class="product-image text-center mt-3" style="height: 200px;">
+                ${product.productImagePath ? `<img src="${product.productImagePath}" alt="${product.alias}" class="img-fluid" style="max-height: 100%; max-width: 100%;">` : '<p class="text-muted">이미지 없음</p>'}
+              </div>
+              <div class="mt-auto">
+                <p class="d-block h5">소비기한: ${expiryDate}</p>
+              </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between" style="padding: 0.5rem 0;">
+              <a href="/calendar" class="btn btn-look2 mb-3" style="flex: 1; margin-right: 5px; padding: 0.25rem 0.5rem;">캘린더에 등록하기</a>
+            </div>
+          </div>
+        </div>`;
+          } else {
+            // 스타일 2 (리스트형 레이아웃)
+            productHtml += `
+              <div class="product-item" data-category="${product.categoryId}" data-product-created="${new Date(product.created_at).toISOString()}">
                 <div class="card h-100">
-                  <div class="card-body d-flex flex-column">
-                    <div class="d-flex justify-content-between align-items-center">
-                      <p class="font-weight-bolder d-block h4 mb-0">
-                        <%= product.alias %>
-                      </p>
-                      <a href="#" class="btn delete-product-btn" data-product-id="<%= product.productId %>"
-                        style="background-color: #f28c91; color: white; padding: 0.25rem 0.5rem;">삭제</a>
+                  <div class="card-body d-flex flex-row align-items-center" style="width: 100%;">
+                    <div class="product-image" style="width: 150px; height: 150px; margin-right: 20px;">
+                      ${product.productImagePath ? `<img src="${product.productImagePath}" alt="${product.alias}" class="img-fluid" />` : '<p class="text-muted">이미지 없음</p>'}
                     </div>
-                    <div class="product-image text-center mt-3" style="height: 200px;">
-                      <% if (product.productImagePath) { %>
-                        <img src="<%= product.productImagePath %>" alt="<%= product.alias %>" class="img-fluid"
-                          style="max-height: 100%; max-width: 100%;">
-                        <% } else { %>
-                          <p class="text-muted">이미지 없음</p>
-                          <% } %>
+                    <div class="product-info">
+                      <p class="font-weight-bolder d-block h4 mb-0">${product.alias}</p>
+                      <p class="d-block h5">소비기한: ${expiryDate}</p>
                     </div>
-                    <div class="mt-auto">
-                      <p class="d-block h5">소비기한: <%= product.expiry_date ?
-                          product.expiry_date.toISOString().split('T')[0] : 'N/A' %>
-                      </p>
-                    </div>
+                    <div class="product-calendar d-flex align-items-center justify-content-between">
+  <a href="/calendar" class="btn btn-look2 mb-0">캘린더에 등록하기</a>
+  <a href="#" class="btn delete-product-btn" data-product-id="${product.productId}" style="background-color: #f28c91; color: white;">삭제</a>
+</div>
+
                   </div>
                 </div>
-              </div>
-              <% }) %>  <!-- forEach를 종료 -->
-          </div>
-          <% } %>  <!-- else 블록 종료 -->
-        </div>
+              </div>`;
+          }
+          
+        });
+
+        productGrid.innerHTML = productHtml;
+      }
 
 
+      // 제품 정렬
+      function sortProducts(criteria) {
+        products.sort(function (a, b) {
+          let dateA, dateB;
+          if (criteria === 'newest') {
+            dateA = new Date(a.created_at);
+            dateB = new Date(b.created_at);
+            return dateB - dateA;
+          } else if (criteria === 'expiry_soon') {
+            dateA = new Date(a.expiry_date);
+            dateB = new Date(b.expiry_date);
+            return dateA - dateB;
+          }
+        });
 
+        applyLayoutStyle(document.getElementById('styleFilter').value);  // 정렬 후 다시 렌더링
+        filterByCategory(); // 정렬 후 카테고리 필터링 유지
+      }
 
-          <footer id="footer">
-            <div class="container-xl">
-              <div class="line mt-5"></div>
-              <img src="/images/logo.png" class="mt-5" alt="">
-              <img src="/images/sns.png" class="d-block mt-2 sns" alt="">
-              <p class="text-dark">Copyright(c) 2024 써도 되나?. All rights reserved.</p>
-            </div>
-          </footer>
-          <script>
-            document.addEventListener('DOMContentLoaded', (event) => {
-              const logoutButton = document.getElementById('logoutButton');
-              if (logoutButton) {
-                logoutButton.addEventListener('click', () => {
-                  fetch('/auth/logout', {
-                    method: 'GET',
-                    credentials: 'include'
-                  })
-                    .then(response => {
-                      if (response.redirected) {
-                        window.location.href = response.url;
-                      }
-                    })
-                    .catch(error => {
-                      console.error('Logout error:', error);
-                    });
-                });
-              }
-            });
+      // 카테고리 필터링
+      function filterByCategory() {
+        var selectedCategory = document.getElementById('categoryFilter').value;
+        var productItems = document.querySelectorAll('.product-item');
 
-            /* 카테고리 선택에 따라 제품을 필터링 */
-            document.getElementById('categoryFilter').addEventListener('change', function () {
-              var selectedCategory = this.value;
-              var products = document.querySelectorAll('.product-item');
+        productItems.forEach(function (product) {
+          var productCategory = product.getAttribute('data-category');
 
-              products.forEach(function (product) {
-                var productCategory = product.getAttribute('data-category');
+          // 화장품 카테고리 선택 시 100, 101, 102, 103 카테고리 모두 표시
+          if (selectedCategory === "100") {
+            if (["100", "101", "102", "103"].includes(productCategory)) {
+              product.style.display = 'block';
+            } else {
+              product.style.display = 'none';
+            }
+          } else if (selectedCategory === "" || productCategory === selectedCategory) {
+            product.style.display = 'block';
+          } else {
+            product.style.display = 'none';
+          }
+        });
+      }
 
-                // 화장품 카테고리 선택 시 100, 101, 102, 103 카테고리 모두 표시
-                if (selectedCategory === "100") {
-                  if (["100", "101", "102", "103"].includes(productCategory)) {
-                    product.style.display = 'block';
-                  } else {
-                    product.style.display = 'none';
-                  }
-                } else if (selectedCategory === "" || productCategory === selectedCategory) {
-                  product.style.display = 'block';
+      // 등록된 제품 삭제
+      document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('delete-product-btn')) {
+          event.preventDefault();
+          const productId = event.target.getAttribute('data-product-id');
+          if (confirm('정말 이 제품을 삭제하시겠습니까?')) {
+            fetch(`/api/products/delete-product/${productId}`, {
+              method: 'DELETE',
+              headers: { 'Content-Type': 'application/json' }
+            })
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  products = products.filter(product => product.productId !== productId);  // 제품 목록에서 삭제된 제품 제거
+                  applyLayoutStyle(document.getElementById('styleFilter').value);  // 다시 렌더링
+                  filterByCategory(); // 삭제 후 카테고리 필터링 유지
+                  alert('제품이 삭제되었습니다.');
                 } else {
-                  product.style.display = 'none';
+                  alert('제품 삭제에 실패했습니다.');
                 }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                alert('서버 오류가 발생했습니다. 다시 시도해주세요.');
               });
-            });
-
-            /* 제품 정렬 */
-            // 최신 등록순으로 기본 정렬
-            sortProducts('newest');
-
-            // 정렬 선택시 정렬 변경
-            document.getElementById('sortFilter').addEventListener('change', function () {
-              sortProducts(this.value);
-            });
-
-
-            // 정렬 함수 정의
-            function sortProducts(criteria) {
-              var products = Array.from(document.querySelectorAll('.product-item'));
-
-              products.sort(function (a, b) {
-                var dateA, dateB;
-
-                switch (criteria) {
-                  case 'newest':
-                    // 등록일을 기준으로 최신 순 정렬
-                    dateA = new Date(a.getAttribute('data-product-created'));
-                    dateB = new Date(b.getAttribute('data-product-created'));
-                    return dateB - dateA;
-
-                  case 'expiry_soon':
-                    // 소비기한 임박순 정렬
-                    dateA = new Date(a.querySelector('.h5').innerText.split('소비기한: ')[1]);
-                    dateB = new Date(b.querySelector('.h5').innerText.split('소비기한: ')[1]);
-                    return dateA - dateB;
-
-                  default:
-                    return 0;
-                }
-              });
-
-              // 정렬된 제품을 DOM에 다시 추가
-              var productGrid = document.getElementById('productGrid');
-              productGrid.innerHTML = '';
-              products.forEach(function (product) {
-                productGrid.appendChild(product);
-              });
-            }
-
-            // 레이아웃 스타일 변경 함수 정의
-            function changeLayoutStyle(style) {
-              var products = document.querySelectorAll('.product-item');
-
-              if (style === 'style1') {
-                // 기본 카드 스타일 유지
-                products.forEach(function (product) {
-                  product.classList.remove('style2-layout');
-                  product.classList.add('col-md-4', 'col-sm-6', 'col-xs-12', 'mb-4');
-                  product.querySelector('.card').classList.remove('style2-card');
-                });
-              } else if (style === 'style2') {
-                // 사진과 같은 리스트 스타일로 변경
-                products.forEach(function (product) {
-                  product.classList.remove('col-md-4', 'col-sm-6', 'col-xs-12', 'mb-4');
-                  product.classList.add('style2-layout'); // 새로운 레이아웃을 위한 클래스 추가
-                  product.querySelector('.card').classList.add('style2-card');
-                });
-              }
-            }
-
-
-            /* 등록된 제품 삭제 */
-            document.querySelectorAll('.delete-product-btn').forEach(button => {
-              button.addEventListener('click', function (event) {
-                event.preventDefault();
-
-                const productId = this.getAttribute('data-product-id');
-
-                if (confirm('정말 이 제품을 삭제하시겠습니까?')) {
-                  fetch(`/api/products/delete-product/${productId}`, {
-                    method: 'DELETE',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    }
-                  })
-                    .then(response => response.json())
-                    .then(data => {
-                      if (data.success) {
-                        // 삭제가 성공하면 제품을 UI에서 제거
-                        const productElement = this.closest('.product-item');
-                        productElement.remove();
-                        alert('제품이 삭제되었습니다.');
-                      } else {
-                        alert('제품 삭제에 실패했습니다.');
-                      }
-                    })
-                    .catch(error => {
-                      console.error('Error:', error);
-                      alert('서버 오류가 발생했습니다. 다시 시도해주세요.');
-                    });
-                }
-              });
-            });
-
-
-          </script>
+          }
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
