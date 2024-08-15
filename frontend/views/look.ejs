@@ -23,13 +23,10 @@
       <div class="collapse navbar-collapse m-5" id="navbarSupportedContent">
         <ul class="navbar-nav mr-5 ml-auto">
           <li class="nav-item d-inline text-right">
-            <a class="nav-link" href="/">제품 소비기한 조회</a>
+            <a class="nav-link" href="/">제품 소비기한 계산 및 등록</a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="/look">내 제품 소비기한 한눈에 보기</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/label">라벨지 출력하기</a>
+            <a class="nav-link" href="/look">내 제품 소비기한 조회</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/calendar">캘린더 일정 확인하기</a>
@@ -60,7 +57,7 @@
     <select id="categoryFilter" class="form-control" style="max-width: 300px; margin-right: 10px;">
       <option value="">카테고리 선택</option>
       <option value="100">화장품</option>
-      <option value="200">의약품</option>
+      <option value="200">의약품 및 건강기능식품</option>
       <option value="300">식품</option>
       <option value="400">기타</option>
     </select>
@@ -187,15 +184,14 @@
                       <p class="d-block h5">소비기한: ${expiryDate}</p>
                     </div>
                     <div class="product-calendar d-flex align-items-center justify-content-between">
-  <a href="/calendar" class="btn btn-look2 mb-0">캘린더에 등록하기</a>
-  <a href="#" class="btn delete-product-btn" data-product-id="${product.productId}" style="background-color: #f28c91; color: white;">삭제</a>
-</div>
-
+                      <a href="/calendar" class="btn btn-look2 mb-0">캘린더에 등록하기</a>
+                      <a href="#" class="btn delete-product-btn" data-product-id="${product.productId}" style="background-color: #f28c91; color: white;">삭제</a>
+                    </div>
                   </div>
                 </div>
               </div>`;
           }
-          
+
         });
 
         productGrid.innerHTML = productHtml;
@@ -231,7 +227,7 @@
 
           // 화장품 카테고리 선택 시 100, 101, 102, 103 카테고리 모두 표시
           if (selectedCategory === "100") {
-            if (["100", "101", "102", "103"].includes(productCategory)) {
+            if (["100", "101", "102", "103", "104", "105", "106", "107", "108", "109"].includes(productCategory)) {
               product.style.display = 'block';
             } else {
               product.style.display = 'none';

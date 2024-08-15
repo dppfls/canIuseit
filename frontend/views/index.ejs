@@ -22,13 +22,10 @@
             <div class="collapse navbar-collapse m-5" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-5 ml-auto">
                     <li class="nav-item active d-inline text-right">
-                        <a class="nav-link" href="#">제품 소비기한 조회</a>
+                        <a class="nav-link" href="#">제품 소비기한 계산 및 등록</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/look">내 제품 소비기한 한눈에 보기</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/label">라벨지 출력하기</a>
+                        <a class="nav-link" href="/look">내 제품 소비기한 조회</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/calendar">캘린더 일정 확인하기</a>
@@ -80,8 +77,8 @@
 
                     <div class="alias-container text-center mt-3">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <input type="text" class="form-control" value="별칭" readonly style="width: 48%;">
-                            <input type="text" class="form-control" id="aliasTextField" placeholder="별칭을 입력하세요"
+                            <input type="text" class="form-control" value="(필수) 제품명" readonly style="width: 48%;">
+                            <input type="text" class="form-control" id="aliasTextField" placeholder="제품명을 입력하세요"
                                 style="width: 48%;">
                         </div>
                     </div>
@@ -90,9 +87,9 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <select name="type" id="categorySelect" class="form-control category-select"
                                 style="width: 48%; border-radius: 10px; padding-left: 20px;">
-                                <option value="">카테고리 선택</option>
+                                <option value="">(필수) 카테고리 선택</option>
                                 <option value="100">화장품</option>
-                                <option value="200">의약품</option>
+                                <option value="200">의약품 및 건강기능식품</option>
                                 <option value="300">식품</option>
                                 <option value="400">기타</option>
                             </select>
@@ -119,6 +116,12 @@
                                     <option value="101">기초 화장품</option>
                                     <option value="102">클렌저</option>
                                     <option value="103">선크림</option>
+                                    <option value="104">기초 메이크업</option>
+                                    <option value="105">아이 메이크업</option>
+                                    <option value="106">립스틱</option>
+                                    <option value="107">매니큐어</option>
+                                    <option value="108">향수</option>
+                                    <option value="109">틴트</option>
                                 </select>
                                 <input list="quantityOptions" id="quantityField" class="form-control"
                                     style="margin-top: 20px; width: 32%;" onchange="calculateExpiryDate()">
@@ -140,15 +143,18 @@
                                     <option value="3Year">
                                 </datalist>
                             </div>
+                            <p style="margin-top: 10px; font-size: 14px; color: #666;">
+                                * 소비기간을 모를 경우, 제품에 적혀있는 유통기한을 소비기한에 입력해주세요.
+                            </p>
                             <h3
-                                style="font-size: 30px; color: black; margin-top: 20px; width: 100%; display: inline-block;">
+                                style="font-size: 30px; color: black; margin-top: 5px; width: 100%; display: inline-block;">
                                 ▶</h3>
                         </div>
                         <div class="field" id="expiryField">
-                            <input type="text" class="form-control" value="소비기한" readonly
+                            <input type="text" class="form-control" value="(필수) 소비기한" readonly
                                 style="margin-top: 20px; width: 100%; display: inline-block;">
                             <input type="date" class="form-control" id="calculatedExpiryField"
-                                style="margin-top: 20px; width: 100%; display: inline-block;">
+                                style="margin-top: 5px; width: 100%; display: inline-block;">
                         </div>
                     </div>
                 </div>
@@ -232,11 +238,15 @@
                     const makeupField = document.getElementById('makeupField');
                     const quantityField = document.getElementById('quantityField');
 
-                    if (makeupField.value === "101" || makeupField.value === "102") {
-                        quantityField.value = "12Month";
-                    } else if (makeupField.value === "103") {
+                    if (makeupField.value === "101" || makeupField.value === "102" || makeupField.value === "104" || makeupField.value === "107") {
+                        quantityField.value = "1Year";
+                    } else if (makeupField.value === "103"|| makeupField.value === "105"|| makeupField.value === "109") {
                         quantityField.value = "6Month";
-                    }
+                    } else if (makeupField.value === "106") {
+                        quantityField.value = "18Month";
+                    } else if (makeupField.value === "108") {
+                        quantityField.value = "2Year";
+                    }    
                     calculateExpiryDate(); // Update expiry date automatically
                 }
 
@@ -319,11 +329,11 @@
                         })
                         .then(data => {
                             if (data.success) {
-                                alert('Product registered successfully!');
+                                alert('제품이 성공적으로 등록되었습니다.');
                                 // 모달 창 초기화
                                 resetModal();
                             } else {
-                                alert('Failed to register product.');
+                                alert('제품 등록이 실패하였습니다.');
                             }
                         })
                         .catch(error => {
