@@ -8,13 +8,13 @@ const Product = require('../models/Product');   // Product 모델 불러오기
 // Multer 설정: 파일을 서버의 `uploads` 폴더에 저장
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, 'uploads/');
+        cb(null, 'uploads/');
     },
     filename: (req, file, cb) => {
-      cb(null, Date.now() + path.extname(file.originalname)); // 파일명에 타임스탬프 추가
+        cb(null, Date.now() + path.extname(file.originalname)); // 파일명에 타임스탬프 추가
     }
-  });
-  const upload = multer({ storage: storage });
+});
+const upload = multer({ storage: storage });
 
 // 제품 추가
 router.post('/register-product', upload.single('productImage'), async (req, res) => {
@@ -40,6 +40,8 @@ router.post('/register-product', upload.single('productImage'), async (req, res)
             console.log('Invalid category ID:', parsedCategoryId);
             return res.status(400).json({ success: false, message: 'Invalid category ID' });
         }
+        // 파일 경로에서 백슬래시를 슬래시로 변환
+        let imagePath = productImage ? productImage.path.replace(/\\/g, '/') : null;
 
         // Sequelize를 사용하여 새로운 제품을 데이터베이스에 추가
         const newProduct = await Product.create({

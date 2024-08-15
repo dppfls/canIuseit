@@ -63,6 +63,9 @@ app.use('/calendar', calendarRoutes);
 
 // 정적 파일 제공 설정
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'resources')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 
 // EJS 템플릿 엔진 설정
 app.set('view engine', 'ejs');
@@ -85,11 +88,6 @@ app.get('/calendar', (req, res) => {
 
 app.get('/login', (req, res) => {
     res.render('login', { user: req.user });
-});
-
-app.get('/label', (req, res) => {
-    const { productName, expiryDate, productId } = req.query; // productId 추가
-    res.render('label', { user: req.user, productName, expiryDate, productId });
 });
 
 // 세션 설정
