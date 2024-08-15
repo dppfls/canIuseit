@@ -12,11 +12,11 @@ const Product = sequelize.define('Product', {
     },
     alias: {
         type: DataTypes.STRING,
-        allowNull: true, // 별칭은 선택 입력 항목
+        allowNull: false, 
     },
     expiry_date: {
         type: DataTypes.DATE,
-        allowNull: true, // 소비기한은 선택 입력 항목
+        allowNull: false, 
     },
     categoryId: {
         type: DataTypes.INTEGER,
@@ -24,7 +24,7 @@ const Product = sequelize.define('Product', {
             model: Category, // Category 모델을 참조
             key: 'id',
         },
-        allowNull: false, // 카테고리 ID는 필수 입력 항목
+        allowNull: false,
     },
     userId: { // User 모델을 참조하는 필드 추가
         type: DataTypes.INTEGER,
@@ -37,6 +37,10 @@ const Product = sequelize.define('Product', {
     created_at: {
         type: DataTypes.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), // 생성 시 자동으로 현재 시간 설정
+    },
+    productImagePath: { // 업로드된 이미지 경로를 저장하는 필드 추가
+        type: DataTypes.STRING,
+        allowNull: true, // 이미지는 선택 사항으로 설정
     },
 }, {
     tableName: 'products', // 테이블 이름 명시적 지정
