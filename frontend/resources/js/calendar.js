@@ -45,6 +45,10 @@ document.addEventListener('DOMContentLoaded', function() {
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
       },
       initialView: 'dayGridMonth',
+      googleCalendarApiKey: 'AIzaSyDCEBbpQXRSAHz2R20dLGO7-7PPjKuP8-U',
+      events: {
+        googleCalendarId: 'c32330140c2801699f50474bceeb4504f394395c8a50062de6b090da69908d07@group.calendar.google.com'
+      },
       navLinks: true, // 날짜를 클릭하면 그 날짜로 이동
       editable: true, // 이벤트를 드래그할 수 있음
       selectable: true, // 날짜를 클릭하여 선택할 수 있음

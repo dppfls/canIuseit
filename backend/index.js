@@ -4,19 +4,17 @@ const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const passport = require('passport');
 const bodyParser = require('body-parser');
-const path = require('path'); // 경로 모듈 불러오기
+const path = require('path');
 const cors = require('cors');
 const flash = require('connect-flash');
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/productRoutes');
 const lookRoutes = require('./routes/lookRoutes');
 const calendarRoutes = require('./routes/calendarRoutes');
-const labelRoutes = require('./routes/labelRoutes'); 
 const sequelize = require('./config/database');
 const { initDb } = require('./models/initDb');
 const { ensureAuthenticated } = require('./middleware/authMid');
 require('./config/passport-setup');
-const fs = require('fs'); // 파일 시스템 모듈 불러오기
 
 const app = express();
 
@@ -60,22 +58,11 @@ app.use((req, res, next) => {
 // 라우트 설정
 app.use('/auth', authRoutes);
 app.use('/api/products', productRoutes);
-app.use('/look', lookRoutes); // /look 경로를 lookRoutes.js에서 처리하도록 연결
-app.use('/calendar', require('./routes/calendarRoutes'));
-app.use('/api/labels', labelRoutes);
+app.use('/look', lookRoutes);
+app.use('/calendar', calendarRoutes);
 
 // 정적 파일 제공 설정
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'resources')));
-
-// uploads 폴더가 존재하는지 확인하고 없으면 생성
-const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir);
-}
-
-// uploads 폴더를 정적 파일로 제공
-app.use('/uploads', express.static(uploadsDir));
-
 
 // EJS 템플릿 엔진 설정
 app.set('view engine', 'ejs');
@@ -85,6 +72,9 @@ app.set('views', path.join(__dirname, '..', 'frontend', 'views'));
 app.get('/', (req, res) => {
     res.render('index', { user: req.user });
 });
+
+// /look 경로를 lookRoutes.js에서 처리하도록 연결
+app.use('/look', lookRoutes);
 
 app.get('/calendar', (req, res) => {
     if (!req.user) {
@@ -96,11 +86,11 @@ app.get('/calendar', (req, res) => {
 app.get('/login', (req, res) => {
     res.render('login', { user: req.user });
 });
-/*
+
 app.get('/label', (req, res) => {
     const { productName, expiryDate, productId } = req.query; // productId 추가
     res.render('label', { user: req.user, productName, expiryDate, productId });
-});*/
+});
 
 // 세션 설정
 app.use(session({
@@ -112,7 +102,6 @@ app.use(session({
     }),
     cookie: { secure: false }  // HTTPS 사용 시 true로 설정
 }));
-
 
 // 보호된 라우트 예시 (로그인 필요)
 app.get('/protected', ensureAuthenticated, (req, res) => {
