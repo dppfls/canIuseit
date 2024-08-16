@@ -15,6 +15,7 @@ const sequelize = require('./config/database');
 const { initDb } = require('./models/initDb');
 const { ensureAuthenticated } = require('./middleware/authMid');
 require('./config/passport-setup');
+const axios = require('axios');
 
 const app = express();
 
