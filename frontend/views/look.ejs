@@ -41,11 +41,15 @@
     </div>
   </nav>
 
-  <div class="look-image">
-    <div class="look-text">
-      <p class="h0 mb-0 mt-5 text-black font-weight-bolder text-center d-block">내 제품 소비기한 한 눈에 보기</p>
-      <p class="h4 mt-3 mb-5 text-black text-center d-block">그동안 조회했던 제품들의 소비기한을 모아봤어요.</p>
+  <div class="look-image" style="position: relative; text-align: center;">
+    <div class="look-text"
+      style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; color: white;">
+      <p class="h1 mb-0 mt-5 text-black font-weight-bolder text-center d-block" style="margin-bottom: 10px;">내 제품 소비기한 한
+        눈에 보기</p>
+      <p class="h5 mt-3 mb-5 text-black text-center d-block">그동안 조회했던 제품들의 소비기한을 모아봤어요.</p>
     </div>
+    <img src="/images/look_bg.png" class="d-block w-100" alt="메인 비주얼 이미지 2" title="메인 비주얼 이미지 2"
+      style="z-index: 0; height: 300px; margin-bottom: 60px; object-fit: cover;">
   </div>
 
   <div class="container-xl text-center mt-3 d-flex justify-content-center align-items-center">
@@ -151,25 +155,29 @@
           if (style === 'style1') {
             // 스타일 1 (카드형 레이아웃)
             productHtml += `
-        <div class="col-md-4 col-sm-6 col-xs-12 mb-4 product-item" data-category="${product.categoryId}" data-product-created="${new Date(product.created_at).toISOString()}">
-          <div class="card h-100">
-            <div class="card-body d-flex flex-column">
-              <div class="d-flex justify-content-between align-items-center">
-                <p class="font-weight-bolder d-block h4 mb-0">${product.alias}</p>
-                <a href="#" class="btn delete-product-btn" data-product-id="${product.productId}" style="background-color: #f28c91; color: white; padding: 0.25rem 0.5rem;">삭제</a>
-              </div>
-              <div class="product-image text-center mt-3" style="height: 200px;">
-                ${product.productImagePath ? `<img src="${product.productImagePath}" alt="${product.alias}" class="img-fluid" style="max-height: 100%; max-width: 100%;">` : '<p class="text-muted">이미지 없음</p>'}
-              </div>
-              <div class="mt-auto">
-                <p class="d-block h5">소비기한: ${expiryDate}</p>
-              </div>
-            </div>
-            <div class="card-footer d-flex justify-content-between" style="padding: 0.5rem 0;">
-              <a href="/calendar" class="btn btn-look2 mb-3" style="flex: 1; margin-right: 5px; padding: 0.25rem 0.5rem;">캘린더에 등록하기</a>
-            </div>
-          </div>
-        </div>`;
+              <div class="col-md-4 col-sm-6 col-xs-12 mb-4 product-item" data-category="${product.categoryId}" data-product-created="${new Date(product.created_at).toISOString()}">
+                <div class="card h-100">
+                  <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <p class="font-weight-bolder d-block h4 mb-0">${product.alias}</p>
+                      <a href="#" class="btn delete-product-btn" data-product-id="${product.productId}" style="background-color: #f28c91; color: white; padding: 0.25rem 0.5rem;">삭제</a>
+                    </div>
+                    <div class="product-image text-center mt-3" style="height: 200px;">
+                      ${product.productImagePath ? `<img src="${product.productImagePath}" alt="${product.alias}" class="img-fluid" style="max-height: 100%; max-width: 100%;">` : '<p class="text-muted">이미지 없음</p>'}
+                    </div>
+                    <div class="mt-auto">
+                      <p class="d-block h5">소비기한: ${expiryDate}</p>
+                    </div>
+                  </div>
+                  <div class="card-footer d-flex justify-content-between" style="padding: 0.5rem 0;">
+                    <button class="btn btn-look2 mb-3 open-calendar-modal" 
+                onclick="window.location.href='/calendar?productName=${encodeURIComponent(product.alias)}&expiryDate=${expiryDate}'" 
+                style="flex: 1; margin-right: 5px; padding: 0.25rem 0.5rem;">
+                캘린더에 등록하기
+            </button>
+                  </div>
+                </div>
+              </div>`;
           } else {
             // 스타일 2 (리스트형 레이아웃)
             productHtml += `
@@ -184,7 +192,11 @@
                       <p class="d-block h5">소비기한: ${expiryDate}</p>
                     </div>
                     <div class="product-calendar d-flex align-items-center justify-content-between">
-                      <a href="/calendar" class="btn btn-look2 mb-0">캘린더에 등록하기</a>
+                       <button class="btn btn-look2 mb-3 open-calendar-modal" 
+                onclick="window.location.href='/calendar?productName=${encodeURIComponent(product.alias)}&expiryDate=${expiryDate}'" 
+                style="flex: 1; margin-right: 5px; padding: 0.25rem 0.5rem;">
+                캘린더에 등록하기
+            </button>
                       <a href="#" class="btn delete-product-btn" data-product-id="${product.productId}" style="background-color: #f28c91; color: white;">삭제</a>
                     </div>
                   </div>
@@ -196,7 +208,6 @@
 
         productGrid.innerHTML = productHtml;
       }
-
 
       // 제품 정렬
       function sortProducts(criteria) {
@@ -241,6 +252,7 @@
       }
 
       // 등록된 제품 삭제
+      // 제품 삭제
       document.addEventListener('click', function (event) {
         if (event.target.classList.contains('delete-product-btn')) {
           event.preventDefault();
@@ -253,9 +265,11 @@
               .then(response => response.json())
               .then(data => {
                 if (data.success) {
-                  products = products.filter(product => product.productId !== productId);  // 제품 목록에서 삭제된 제품 제거
-                  applyLayoutStyle(document.getElementById('styleFilter').value);  // 다시 렌더링
-                  filterByCategory(); // 삭제 후 카테고리 필터링 유지
+                  // 삭제된 제품을 DOM에서 제거
+                  const productElement = event.target.closest('.product-item');
+                  if (productElement) {
+                    productElement.remove();  // 제품 요소 제거
+                  }
                   alert('제품이 삭제되었습니다.');
                 } else {
                   alert('제품 삭제에 실패했습니다.');
@@ -269,6 +283,8 @@
         }
       });
     });
+
+    
   </script>
 </body>
 

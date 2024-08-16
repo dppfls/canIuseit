@@ -261,6 +261,7 @@ margin-bottom: 0%;
   flex-basis: calc(33.3333% - 20px); /* 각 카드의 크기 설정 */
   max-width: calc(33.3333% - 20px); /* 최대 너비 설정 */
   box-sizing: border-box; /* 패딩과 보더를 너비/높이 계산에 포함 */
+  margin-left: 17px;
 }
 
 .style1 .product-image {
@@ -419,6 +420,10 @@ margin-bottom: 0%;
   padding-top: 1em;
   padding-left: 1em;
   padding-right: 1em;
+}
+.selected-event {
+  border: 2px solid red; /* 테두리를 빨간색으로 표시 */
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); /* 클릭한 이벤트에 그림자 추가 */
 }
 
 /* 달력의 전체 스타일 조정 */
