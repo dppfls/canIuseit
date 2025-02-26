@@ -1,16 +1,15 @@
 {
-  "name": "caniuseit",
+  "name": "project",
   "version": "1.0.0",
-  "description": "Backend for canIuseit project",
-  "main": "server.js",
+  "main": "main.js",
   "scripts": {
-    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
+  "description": "",
   "dependencies": {
+    "ejs": "^3.1.10",
     "express": "^4.19.2"
   }
 }

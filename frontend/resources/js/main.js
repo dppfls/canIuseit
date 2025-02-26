@@ -1,110 +1,48 @@
-"use strict";
-jQuery(document).ready(function ($) {
+// main.js
 
-//for Preloader
-
-    $(window).load(function () {
-        $("#loading").fadeOut(500);
-    });
-
-
-    /*---------------------------------------------*
-     * Mobile menu
-     ---------------------------------------------*/
-    $('#navbar-menu').find('a[href*=#]:not([href=#])').click(function () {
-        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
-            var target = $(this.hash);
-            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-            if (target.length) {
-                $('html,body').animate({
-                    scrollTop: (target.offset().top - 80)
-                }, 1000);
-                if ($('.navbar-toggle').css('display') != 'none') {
-                    $(this).parents('.container').find(".navbar-toggle").trigger("click");
-                }
-                return false;
-            }
+window.onload = function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get('code');
+  if (code) {
+    // OAuth2 인증 코드를 처리하는 로직을 여기에 추가
+    fetch('/auth/google/callback?code=' + code)
+      .then(response => response.json())
+      .then(data => {
+        if (data.token) {
+          localStorage.setItem('oauthToken', data.token);
+          window.location.href = '/';
         }
-    });
+      })
+      .catch(error => console.error('Error:', error));
+  }
 
+  // 로그아웃 버튼이 있는 경우 로그아웃 이벤트 리스너 추가
+  const logoutButton = document.getElementById('logoutButton');
+  if (logoutButton) {
+    logoutButton.addEventListener('click', logout);
+  }
+};
 
+function logout() {
+  console.log('Logout button clicked'); // 로그아웃 버튼 클릭 로그
+  fetch('/auth/logout')
+    .then(response => {
+      if (response.redirected) {
+        window.location.href = response.url;
+      } else {
+        console.error('Failed to log out');
+      }
+    })
+    .catch(error => console.error('Error:', error));
+}
 
-    /*---------------------------------------------*
-     * WOW
-     ---------------------------------------------*/
-
-    var wow = new WOW({
-        mobile: false // trigger animations on mobile devices (default is true)
-    });
-    wow.init();
-
-// magnificPopup
-
-    $('.popup-img').magnificPopup({
-        type: 'image',
-        gallery: {
-            enabled: true
-        }
-    });
-
-    $('.video-link').magnificPopup({
-        type: 'iframe'
-    });
-
-
-
-// slick slider active Home Page Tow
-    $(".hello_slid").slick({
-        dots: true,
-        infinite: false,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        arrows: true,
-        prevArrow: "<i class='icon icon-chevron-left nextprevleft'></i>",
-        nextArrow: "<i class='icon icon-chevron-right nextprevright'></i>",
-        autoplay: true,
-        autoplaySpeed: 2000
-    });
-    
-    
-    
-    $(".business_items").slick({
-        dots: true,
-        infinite: false,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        arrows: true,
-        prevArrow: "<i class='icon icon-chevron-left nextprevleft'></i>",
-        nextArrow: "<i class='icon icon-chevron-right nextprevright'></i>",
-        autoplay: true,
-        autoplaySpeed: 2000
-    });
-
-
-
-
-//---------------------------------------------
-// Scroll Up 
-//---------------------------------------------
-
-    $('.scrollup').click(function () {
-        $("html, body").animate({scrollTop: 0}, 1000);
-        return false;
-    });
-
-
-
-
-
-
-
-
-
-
-
-    //End
-
-});
-
-
-
+function fetchWithAuth(url, options = {}) {
+  const token = localStorage.getItem('oauthToken');
+  if (token) {
+    options.headers = {
+      ...options.headers,
+      'Authorization': `Bearer ${token}`
+    };
+  }
+  return fetch(url, options);
+}
